@@ -1,0 +1,18 @@
+{
+  "insertOutput": 0, 
+  "parseRegex": "", 
+  "doNotOpenOutputWindow": 0, 
+  "keyboard_shortcut": "F5", 
+  "name": "%(python3) C:\\Users\\Ahn\\Documents\\Python\\Eat_a_snake\\eat_a_snake.py", 
+  "operateOnSelection": 0, 
+  "value": [
+    "%(python3) C:\\Users\\Ahn\\Documents\\Python\\Eat_a_snake\\eat_a_snake.py"
+  ], 
+  "cwd": "", 
+  "version": "1.0.12", 
+  "env": "", 
+  "showParsedOutputList": 0, 
+  "type": "command", 
+  "parseOutput": 0, 
+  "runIn": "command-output-window"
+}
