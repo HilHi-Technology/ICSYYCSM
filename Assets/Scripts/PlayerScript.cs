@@ -13,7 +13,7 @@ public class PlayerScript : MonoBehaviour {
 
     // Use this for initialization
 	void Start () {
-
+        Application.targetFrameRate = 1;
 	}
 
     
@@ -21,20 +21,6 @@ public class PlayerScript : MonoBehaviour {
 
     void Update() {
         //Selecting color slots to determine which color will be swap out when player changes color.
-    
-    }
-	
-
-
-
-	// Update is called once every 0.2 seconds (not every frame)
-    void FixedUpdate() {
-
-        //Get keyboard input for the movement and calculate the player's velocity
-        float horMove = Input.GetAxisRaw("Horizontal") * speed;
-        float verMove = Input.GetAxisRaw("Vertical") * speed;
-        rigidbody2D.velocity = new Vector2(horMove, verMove); //Set the velocity
-
         //Casting rays and creating dynamic shadows
         playerPos = new Vector2(transform.position.x, transform.position.y); //Changing player position into a vector2 instead of v3
         Vector2 prevPoint1 = new Vector2(-9999, -9999); //Previous points are used to keep track of previous ray hits in order to draw quads
@@ -85,5 +71,19 @@ public class PlayerScript : MonoBehaviour {
                 DrawScript.drawList.Add(startPoint2);
             }
         }
+    }
+	
+
+
+
+	// Update is called once every 0.2 seconds (not every frame)
+    void FixedUpdate() {
+
+        //Get keyboard input for the movement and calculate the player's velocity
+        float horMove = Input.GetAxisRaw("Horizontal") * speed;
+        float verMove = Input.GetAxisRaw("Vertical") * speed;
+        rigidbody2D.velocity = new Vector2(horMove, verMove); //Set the velocity
+
+
     }
 }

@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour {
     public float accuracy; //How much the enemy can miss by in degrees
     // Use this for initialization
     void Start() {
+        Application.targetFrameRate = 60;
         timer = Time.time;
         state = "entering"; //Starting state
         player = GameObject.FindWithTag("Player");
