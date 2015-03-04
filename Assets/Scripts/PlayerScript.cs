@@ -4,16 +4,21 @@ using System.Collections;
 public class PlayerScript : MonoBehaviour {
     Vector2 playerPos;
     public LayerMask lightLayerMask;
+    public LayerMask badBoxMask;
     public int rayCastAmnt; //Amount of rays being cast to check for visibility
     public float visionRange;
     public float shadowLength;
     public float shadowOffset;
-
+    public Transform badBox;
+    private bool badBoxHit;
+    public Transform youWon;
+    private GUIText youWonText;
     public float speed; //How fast the player moves
 
     // Use this for initialization
 	void Start () {
         Application.targetFrameRate = 1;
+        youWonText = youWon.GetComponent<GUIText>();
 	}
 
     
@@ -27,6 +32,7 @@ public class PlayerScript : MonoBehaviour {
         Vector2 prevPoint2 = new Vector2(-9999, -9999); //Initialized as -9999 because you can't initialize it as null
         Vector2 startPoint1 = new Vector2(-9999, -9999); //The first ray hit position. Used to connect the last ray hit and the first ray hit together
         Vector2 startPoint2 = new Vector2(-9999, -9999);
+        badBoxHit = false;
         for (int i = 0; i < rayCastAmnt; i++) //Iterate through all the rays
         {
             float angle = (float)i / (float)rayCastAmnt * 360; //Figure out what angle the ray is in degree.
@@ -34,6 +40,7 @@ public class PlayerScript : MonoBehaviour {
             float sin = Mathf.Sin(angle * Mathf.Deg2Rad); //Figure out the sine of the angle.
             Vector2 direction = new Vector2(cos, sin); //Figure out the direction of the raycast (in vector form, e.g. 30deg would be (cos(30),sin(30))).
             RaycastHit2D rayhit = Physics2D.Raycast(transform.position, direction, visionRange, lightLayerMask); //Cast the ray and store the hit info
+            RaycastHit2D badBoxRayHit = Physics2D.Raycast(transform.position, direction, visionRange, badBoxMask); //Cast the ray and store the hit info
             Vector2 hitPoint;
             if (rayhit.transform == null) { //check if the ray hits nothing
                 hitPoint = new Vector2(cos * visionRange, sin * visionRange) + playerPos;
@@ -54,6 +61,12 @@ public class PlayerScript : MonoBehaviour {
                 startPoint2 = curPoint2;
                 continue;
             }
+            if (badBoxRayHit.collider != null) {
+                if (badBoxRayHit.collider.tag == "Enemy") {
+                    badBoxHit = true;
+                    //Debug.Log("loL");
+                }
+            }
 
             //Draw the shadows
             DrawScript.drawList.Add(prevPoint1);
@@ -70,6 +83,10 @@ public class PlayerScript : MonoBehaviour {
                 DrawScript.drawList.Add(curPoint2);
                 DrawScript.drawList.Add(startPoint2);
             }
+        }
+        if (!badBoxHit) {
+            youWonText.enabled = true;
+            Time.timeScale = 0;
         }
     }
 	
