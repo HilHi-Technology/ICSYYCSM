@@ -99,7 +99,7 @@ public class PlayerScript : MonoBehaviour {
         //Get keyboard input for the movement and calculate the player's velocity
         float horMove = Input.GetAxisRaw("Horizontal") * speed;
         float verMove = Input.GetAxisRaw("Vertical") * speed;
-        rigidbody2D.velocity = new Vector2(horMove, verMove); //Set the velocity
+        GetComponent<Rigidbody2D>().velocity = new Vector2(horMove, verMove); //Set the velocity
 
 
     }

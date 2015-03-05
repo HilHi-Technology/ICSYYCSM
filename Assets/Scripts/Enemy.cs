@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour {
                     Quaternion rotation = t_arrow.transform.rotation; //Shortener
                     rotation = Quaternion.Euler(new Vector3(0, 0, (rotation.eulerAngles.z - accuracy / 2) + Random.value * accuracy));
                     t_arrow.transform.rotation = rotation;
-                    t_arrow.rigidbody2D.velocity = t_arrow.transform.right * arrow_shoot_speed;
+                    t_arrow.GetComponent<Rigidbody2D>().velocity = t_arrow.transform.right * arrow_shoot_speed;
 
                     timer = Time.time;
                     shot = true;
