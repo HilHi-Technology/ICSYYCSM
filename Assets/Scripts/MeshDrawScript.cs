@@ -9,6 +9,7 @@ public class MeshDrawScript : MonoBehaviour {
     private Vector2 mouse_pos;
     public LayerMask rayMask;
     public GameObject MeshObj;
+    public GameObject MeshObjParent;
     public List<GameObject> MeshList = new List<GameObject>();
 	// Use this for initialization
 	void Start () {
@@ -51,16 +52,17 @@ public class MeshDrawScript : MonoBehaviour {
 
 
             if (ray != null) {
-                GameObject obj = Instantiate(MeshObj) as GameObject;
+                GameObject obj = Instantiate(MeshObj, Vector3.zero, Quaternion.identity) as GameObject;
+                obj.transform.parent = MeshObjParent.transform;
                 MeshList.Add(obj);
                 MeshDraw scr = obj.GetComponent<MeshDraw>();
                 scr.vertices[0] = previousPoint;
                 scr.vertices[1] = transform.position;
                 scr.vertices[2] = v;
 
-                scr.colors[0] = new Color(0, 0, 0, 1);
-                scr.colors[1] = new Color(1, 1, 1, 1); //White
-                scr.colors[2] = new Color(0, 0, 0, 1);
+                scr.colors[0] = new Color(0, 0, 0, 0);
+                scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
+                scr.colors[2] = new Color(0, 0, 0, 0);
                 Debug.DrawLine(transform.position, ray.point, Color.white);
                 previousPoint = v;
             }
