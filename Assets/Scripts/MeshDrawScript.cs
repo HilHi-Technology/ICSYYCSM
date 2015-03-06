@@ -61,9 +61,9 @@ public class MeshDrawScript : MonoBehaviour {
                 scr.vertices[1] = transform.position;
                 scr.vertices[2] = ray.point;
 
-                scr.colors[0] = new Color(1, 1, 1, 1);
-                scr.colors[1] = new Color(1, 1, 1, 1f); //White
-                scr.colors[2] = new Color(1, 1, 1, 1);
+                scr.colors[0] = new Color(1, 1, 1, 0.5f);
+                scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
+                scr.colors[2] = new Color(1, 1, 1, 0.5f);
                 Debug.DrawLine(transform.position, ray.point, Color.white);
                 previousPoint = v;
             }
