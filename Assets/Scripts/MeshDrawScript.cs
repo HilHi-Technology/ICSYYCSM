@@ -45,7 +45,8 @@ public class MeshDrawScript : MonoBehaviour {
         foreach (Vector2 v in vList) {
             //Debug.Log(Vector2.Angle(transform.position, v));
             Debug.DrawLine(previousPoint, v, Color.red);
-            
+
+            RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude, rayMask);
             RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, (v - (Vector2)transform.position).magnitude, rayMask);
             //Debug.Log(ray.point);
 
@@ -56,13 +57,13 @@ public class MeshDrawScript : MonoBehaviour {
                 obj.transform.parent = MeshObjParent.transform;
                 MeshList.Add(obj);
                 MeshDraw scr = obj.GetComponent<MeshDraw>();
-                scr.vertices[0] = previousPoint;
+                scr.vertices[0] = previousRay.point;
                 scr.vertices[1] = transform.position;
-                scr.vertices[2] = v;
+                scr.vertices[2] = ray.point;
 
-                scr.colors[0] = new Color(0, 0, 0, 0);
-                scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
-                scr.colors[2] = new Color(0, 0, 0, 0);
+                scr.colors[0] = new Color(1, 1, 1, 1);
+                scr.colors[1] = new Color(1, 1, 1, 1f); //White
+                scr.colors[2] = new Color(1, 1, 1, 1);
                 Debug.DrawLine(transform.position, ray.point, Color.white);
                 previousPoint = v;
             }
