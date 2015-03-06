@@ -27,7 +27,7 @@ public class DrawScript : MonoBehaviour {
         mat.SetPass(0);
         GL.LoadOrtho();
         GL.Begin(GL.QUADS);
-        GL.Color(Color.black);
+        GL.Color(new Color(1, 1, 1, 0.5f));
         foreach (Vector2 quad in drawList){
             GL.Vertex3(Camera.main.WorldToViewportPoint(new Vector3(quad.x, quad.y, 0)).x, Camera.main.WorldToViewportPoint(new Vector3(quad.x, quad.y, 0)).y, 0);
             //Debug.Log(Camera.main.WorldToViewportPoint(new Vector3(quad.x, quad.y, 0)).x + " " + Camera.main.WorldToViewportPoint(new Vector3(quad.x, quad.y, 0)).y);
