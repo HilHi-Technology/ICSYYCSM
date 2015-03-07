@@ -49,9 +49,9 @@ public class MeshDrawScript : MonoBehaviour {
             i++;
             //Debug.Log(Vector2.Angle(transform.position, v));
             if (i > 1) {
-                Debug.DrawLine(previousPoint, v, Color.red)
-                RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, 2000, rayMask);
-                RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, 2000, rayMask);
+                Debug.DrawLine(previousPoint, v, Color.red);
+                RaycastHit2D previousRay = Physics2D.CircleCast(transform.position, 0.0009f, previousPoint - (Vector2)transform.position, 2000, rayMask);
+                RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.0009f, v - (Vector2)transform.position, 2000, rayMask);
                 //Debug.Log(ray.point);
             
                 if (previousRay.point == new Vector2(0,0)) {
