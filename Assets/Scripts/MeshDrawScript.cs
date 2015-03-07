@@ -22,7 +22,7 @@ public class MeshDrawScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
         int i = 0;
         previousPoint = transform.position;
         foreach (GameObject obj in MeshList) {
@@ -44,17 +44,17 @@ public class MeshDrawScript : MonoBehaviour {
             }
         }
         vList.Sort((item1, item2) => (Mathf.Atan2(item1.x - transform.position.x, item1.y - transform.position.y).CompareTo(Mathf.Atan2(item2.x - transform.position.x, item2.y - transform.position.y))));
-
+        vList.Add(vList[0]);
         foreach (Vector2 v in vList) {
             i++;
             //Debug.Log(Vector2.Angle(transform.position, v));
             if (i > 1) {
                 Debug.DrawLine(previousPoint, v, Color.red);
-                RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude, rayMask);
-                RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, (v - (Vector2)transform.position).magnitude, rayMask);
+                RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, 2000, rayMask);
+                RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, 2000, rayMask);
                 //Debug.Log(ray.point);
             
-                if (previousRay.collider == null) {
+                if (previousRay.point == new Vector2(0,0)) {
                     Debug.Log(previousRay.collider != null);
                     //previousRay.transform.parent.transform.position = new Vector3(2, 2, 0);
                     Debug.DrawLine(transform.position, previousRay.point, Color.blue);
@@ -90,24 +90,24 @@ public class MeshDrawScript : MonoBehaviour {
 
 
         }
-        RaycastHit2D previousRay2 = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude * 2, rayMask);
-        RaycastHit2D ray2 = Physics2D.Raycast(transform.position, vList[0] - (Vector2)transform.position, (vList[0] - (Vector2)transform.position).magnitude, rayMask);
-        Debug.DrawLine(previousPoint, vList[0], Color.red);
+        //RaycastHit2D previousRay2 = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude * 2, rayMask);
+        //RaycastHit2D ray2 = Physics2D.Raycast(transform.position, vList[0] - (Vector2)transform.position, (vList[0] - (Vector2)transform.position).magnitude, rayMask);
+        //Debug.DrawLine(previousPoint, vList[0], Color.red);
 
 
-        GameObject obj2 = Instantiate(MeshObj, Vector3.zero, Quaternion.identity) as GameObject;
-        obj2.transform.parent = MeshObjParent.transform;
-        MeshList.Add(obj2);
-        MeshDraw scr2 = obj2.GetComponent<MeshDraw>();
-        scr2.vertices[0] = previousRay2.point;
-        //Debug.Log(previousRay.point + " " + i);
-        scr2.vertices[1] = transform.position;
-        scr2.vertices[2] = ray2.point;
+        //GameObject obj2 = Instantiate(MeshObj, Vector3.zero, Quaternion.identity) as GameObject;
+        //obj2.transform.parent = MeshObjParent.transform;
+        //MeshList.Add(obj2);
+        //MeshDraw scr2 = obj2.GetComponent<MeshDraw>();
+        //scr2.vertices[0] = previousRay2.point;
+        ////Debug.Log(previousRay.point + " " + i);
+        //scr2.vertices[1] = transform.position;
+        //scr2.vertices[2] = ray2.point;
 
-        scr2.colors[0] = new Color(1, 1, 1, 0.5f);
-        scr2.colors[1] = new Color(1, 1, 1, 0.5f); //White
-        scr2.colors[2] = new Color(1, 1, 1, 0.5f);
-        //Debug.DrawLine(transform.position, ray2.point, Color.white
+        //scr2.colors[0] = new Color(1, 1, 1, 0.5f);
+        //scr2.colors[1] = new Color(1, 1, 1, 0.5f); //White
+        //scr2.colors[2] = new Color(1, 1, 1, 0.5f);
+        //Debug.DrawLine(transform.position, ray2.point, Color.white)
         vList.Clear();
         //Debug.Log(Mathf.Atan2(mouse_pos.x - transform.position.x, mouse_pos.y - transform.position.y) * Mathf.Rad2Deg);
         
