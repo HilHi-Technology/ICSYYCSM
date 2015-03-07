@@ -18,6 +18,7 @@ public class MeshDrawScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         previousPoint = transform.position; //Initialize previous point, but it won't be used until it receives another 
+
         foreach (GameObject obj in MeshList) {
             Destroy(obj);
         }
@@ -44,23 +45,37 @@ public class MeshDrawScript : MonoBehaviour {
                 RaycastHit2D previousRay = Physics2D.CircleCast(transform.position, 0.0009f, previousPoint - (Vector2)transform.position, 2000, rayMask);
                 RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.0009f, v - (Vector2)transform.position, 2000, rayMask);
 
+                Vector2 vert0 = previousRay.point;
+                Vector2 vert1 = transform.position;
+                Vector2 vert2 = ray.point;
+
+                if (previousRay.collider != ray.collider) {
+                    RaycastHit2D previousRay2 = Physics2D.Raycast(previousRay.point, previousPoint - (Vector2)transform.position, 2000, rayMask);
+                    RaycastHit2D ray2 = Physics2D.Raycast(ray.point, v - (Vector2)transform.position, 2000, rayMask);
+                    vert0 = previousRay2.point;
+                    vert1 = transform.position;
+                    vert2 = ray2.point;
+                    Debug.DrawLine(previousRay.point, previousRay2.point, Color.yellow);
+                    Debug.DrawLine(ray.point, ray2.point, Color.yellow);
+                }
 
                 GameObject obj = Instantiate(MeshObj, Vector3.zero, Quaternion.identity) as GameObject;
                 obj.transform.parent = MeshObjParent.transform;
                 MeshList.Add(obj);
                 MeshDraw scr = obj.GetComponent<MeshDraw>();
-                scr.vertices[0] = previousRay.point;
+                scr.vertices[0] = vert0;
                 //Debug.Log(ray.point + " " + i);
-                scr.vertices[1] = transform.position;
-                scr.vertices[2] = ray.point;
+                scr.vertices[1] = vert1;
+                scr.vertices[2] = vert2;
                 //Debug.DrawLine(transform.position, ray.point);
 
                 scr.colors[0] = new Color(1, 1, 1, 0.5f);
                 scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
                 scr.colors[2] = new Color(1, 1, 1, 0.5f);
                 Debug.DrawLine(transform.position, ray.point, Color.white);
+                //}
+                
             }
-            //}
             previousPoint = v;
 
 
