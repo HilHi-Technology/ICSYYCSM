@@ -9,7 +9,7 @@ public class MeshDraw : MonoBehaviour {
     public Color[] colors = new Color[3];
     private int i = 1;
 	void Start () {
-        Debug.Log("Test");
+        //Debug.Log("Test");
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.Clear();
         //vertices = new Vector3[3] { new Vector3(0, 0, 0), new Vector3(2, 2, 0), new Vector3(2, 0, 0) };
