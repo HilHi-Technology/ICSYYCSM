@@ -22,7 +22,7 @@ public class MeshDrawScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
         int i = 0;
         previousPoint = transform.position;
         foreach (GameObject obj in MeshList) {
@@ -50,8 +50,8 @@ public class MeshDrawScript : MonoBehaviour {
             //Debug.Log(Vector2.Angle(transform.position, v));
             if (i > 1) {
                 Debug.DrawLine(previousPoint, v, Color.red);
-                RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude, rayMask);
-                RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, (v - (Vector2)transform.position).magnitude, rayMask);
+                RaycastHit2D previousRay = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude+1000, rayMask);
+                RaycastHit2D ray = Physics2D.Raycast(transform.position, v - (Vector2)transform.position, (v - (Vector2)transform.position).magnitude+1000, rayMask);
                 //Debug.Log(ray.point);
             
                 if (previousRay.collider == null) {
@@ -90,8 +90,8 @@ public class MeshDrawScript : MonoBehaviour {
 
 
         }
-        RaycastHit2D previousRay2 = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude * 2, rayMask);
-        RaycastHit2D ray2 = Physics2D.Raycast(transform.position, vList[0] - (Vector2)transform.position, (vList[0] - (Vector2)transform.position).magnitude, rayMask);
+        RaycastHit2D previousRay2 = Physics2D.Raycast(transform.position, previousPoint - (Vector2)transform.position, (previousPoint - (Vector2)transform.position).magnitude + 1000, rayMask);
+        RaycastHit2D ray2 = Physics2D.Raycast(transform.position, vList[0] - (Vector2)transform.position, (vList[0] - (Vector2)transform.position).magnitude + 1000, rayMask);
         Debug.DrawLine(previousPoint, vList[0], Color.red);
 
 
