@@ -21,6 +21,7 @@ public class MeshDrawScript : MonoBehaviour {
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
             Destroy(obj);
         }
+        DrawList.Clear();
         mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Get the mouse position in world coordinates
 
         //Find all vertices and add it to a list
@@ -52,7 +53,7 @@ public class MeshDrawScript : MonoBehaviour {
 
                 if (previousRay.collider != ray.collider) { //If the 2 vertices are not part of the same object
                     //Shoot another ray to extend the vertex to the next 
-                    Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f); //(0.0009, 0.8*0.0009)
+                    Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f); 
                     Vector2 pStart = previousRay.point + ((previousPoint - (Vector2)transform.position).normalized * 0.05f);
                     RaycastHit2D previousRay2 = Physics2D.Raycast(pStart, previousPoint - (Vector2)transform.position, 2000, rayMask);
                     RaycastHit2D ray2 = Physics2D.Raycast(start, v - (Vector2)transform.position, 2000, rayMask);
@@ -63,8 +64,8 @@ public class MeshDrawScript : MonoBehaviour {
                     Debug.DrawLine(start, ray2.point, Color.yellow);
                 }
 
-                GameObject obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject;
-                DrawList.Add(obj);
+                GameObject obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject; //Create a draw object
+                DrawList.Add(obj); //Add to the this list to be removed eventually
                 MeshDraw scr = obj.GetComponent<MeshDraw>();
                 scr.vertices[0] = vert0;
                 //Debug.Log(ray.point + " " + i);
