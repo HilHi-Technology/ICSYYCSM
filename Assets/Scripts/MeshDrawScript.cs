@@ -9,6 +9,8 @@ public class MeshDrawScript : MonoBehaviour {
     public LayerMask rayMask; //Used to only cast light rays on certain layers of objects
     public GameObject DrawObj; //Objects that are used to draw the lights. One will be created for each triangle of light drawn
     public List<GameObject> DrawList = new List<GameObject>(); //The list that contains all the mesh objects to destroy them after every loop
+    public int shadow_length;
+    public float shadow_offset;
     // Use this for initialization
     void Start() {
 
@@ -42,40 +44,46 @@ public class MeshDrawScript : MonoBehaviour {
             if (previousPoint != (Vector2)transform.position) { //Skip drawing on the first vertex, because there are not enough points to draw a triangle
                 Debug.DrawLine(previousPoint, v, Color.red); //Draw debug lines connecting all the vertices
 
-                //Shoot a ray at previous vertex and current vertex
+                //Shoot a ray at previous vertex and current vertex. Circlecast is used to increase the ray width, so it won't miss the vertex it's shooting at.
                 RaycastHit2D previousRay = Physics2D.CircleCast(transform.position, 0.0009f, previousPoint - (Vector2)transform.position, 2000, rayMask); 
                 RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.0009f, v - (Vector2)transform.position, 2000, rayMask);
 
                 //Set vertices to be drawn
-                Vector2 vert0 = previousRay.point;
-                Vector2 vert1 = transform.position;
-                Vector2 vert2 = ray.point;
+                Vector2 prev_point = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
+                Vector2 prev_point_extend = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
+                Vector2 cur_point = ray.point + (v - (Vector2)transform.position).normalized * shadow_offset;
+                Vector2 cur_point_extend = ray.point + (v - (Vector2)transform.position).normalized * shadow_length;
 
                 if (previousRay.collider != ray.collider) { //If the 2 vertices are not part of the same object
                     //Shoot another ray to extend the vertex to the next 
-                    Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f); 
+                    Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f);
                     Vector2 pStart = previousRay.point + ((previousPoint - (Vector2)transform.position).normalized * 0.05f);
                     RaycastHit2D previousRay2 = Physics2D.Raycast(pStart, previousPoint - (Vector2)transform.position, 2000, rayMask);
                     RaycastHit2D ray2 = Physics2D.Raycast(start, v - (Vector2)transform.position, 2000, rayMask);
-                    vert0 = previousRay2.point;
-                    vert1 = transform.position;
-                    vert2 = ray2.point;
-                    Debug.DrawLine(pStart, previousRay2.point, Color.yellow); 
+
+                    prev_point = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
+                    prev_point_extend = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
+                    cur_point = ray2.point + (v - (Vector2)transform.position).normalized * shadow_offset;
+                    cur_point_extend = ray2.point + (v - (Vector2)transform.position).normalized * shadow_length;
+
+                    Debug.DrawLine(pStart, previousRay2.point, Color.yellow);
                     Debug.DrawLine(start, ray2.point, Color.yellow);
                 }
 
-                GameObject obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject; //Create a draw object
-                DrawList.Add(obj); //Add to the this list to be removed eventually
+                //Create draw objects for each light triangles being drawn in order to draw them.
+                GameObject obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject; 
+                DrawList.Add(obj); //Add draw objects to the this list to be removed eventually
                 MeshDraw scr = obj.GetComponent<MeshDraw>();
-                scr.vertices[0] = vert0;
-                //Debug.Log(ray.point + " " + i);
-                scr.vertices[1] = vert1;
-                scr.vertices[2] = vert2;
-                //Debug.DrawLine(transform.position, ray.point);
+                scr.vertices[0] = (Vector3)prev_point;
+                scr.vertices[1] = (Vector3)prev_point_extend;
+                scr.vertices[2] = (Vector3)cur_point;
+                scr.vertices[3] = (Vector3)cur_point_extend;
 
-                scr.colors[0] = new Color(1, 1, 1, 0.5f);
-                scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
-                scr.colors[2] = new Color(1, 1, 1, 0.5f);
+                //Set the color of the vision
+                scr.colors[0] = new Color(0, 0, 0, 1f); //Previous point
+                scr.colors[1] = new Color(0, 0, 0, 1f); //This vertex is the player's position
+                scr.colors[2] = new Color(0, 0, 0, 1f); //Current point
+                scr.colors[3] = new Color(0, 0, 0, 1f); //Current point
                 Debug.DrawLine(transform.position, ray.point, Color.white);
                 //}
                 
