@@ -9,7 +9,6 @@ public class MeshDraw : MonoBehaviour {
     public Color[] colors = new Color[4];
     private int i = 1;
 	void Start () {
-        //Debug.Log("Test");
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.Clear();
         //vertices = new Vector3[3] { new Vector3(0, 0, 0), new Vector3(2, 2, 0), new Vector3(2, 0, 0) };
@@ -29,7 +28,7 @@ public class MeshDraw : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("Test" + i);
+        Debug.Log("Test" + i); //the real comment
         i++;
 
 	}
