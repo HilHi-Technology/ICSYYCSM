@@ -121,4 +121,8 @@ public class MeshDrawScript : MonoBehaviour {
         }
         vList.Clear();
     }
+    //void OnDrawGizmos(){
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawSphere(transform.position, 5);
+    //}
 }
