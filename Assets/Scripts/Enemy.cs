@@ -1,85 +1,69 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
-    private string state;
-    private float timer; //Timer varaible
-    public float battle_move_frequency; //How often enemy moves around in battle mode (in seconds)
-    public float battle_move_range; //How far can the enemy move randomly
-    private Vector2 destination;
-    private bool movement_chosen = false; //Determines whether destination has already been chosen for that move cycle
+    public GameObject start;
+    public GameObject dest;
+    private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>();
+    Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();
+    Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>();
+    private int current_dest; 
+    public List<GameObject> moveNodes = new List<GameObject>();
     public float speed;
-    public GameObject player;
-    public float shoot_delay; //The delay after stopping to shoot
-    public float after_shoot_delay; //The delay after shooting to move again
-    private bool shot = false; //Whether object has shot anything yet
-    public GameObject arrow;
-    public float arrow_shoot_speed;
-    private bool entered_view = false; //Has enemy entered the camera view yet?
-    public float accuracy; //How much the enemy can miss by in degrees
+
     // Use this for initialization
     void Start() {
-        
-        timer = Time.time;
-        state = "entering"; //Starting state
-        player = GameObject.FindWithTag("Player");
+        cameFrom.Add(start, default(GameObject));
+        costSoFar.Add(start, 0);
+        frontier.insert(start, 0);
+        int i = 0;
+        //Debug.Log(start.GetComponent<NodeScript>().neighbors);
+        while (i < 3) {
+            i++;
+            Debug.Log("got here");
+            GameObject current = frontier.get();
+            List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors
+
+            if (current == dest) {
+                break; //Found our destination
+            }
+            Debug.Log("Current: " + current);
+
+            foreach (GameObject next in neighbors) {
+                
+                float newCost = costSoFar[current] + Vector2.Distance(current.transform.position, next.transform.position);
+                Debug.Log("Neighbors: " + next + " Cost: " + newCost);
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) {
+                    costSoFar[next] = newCost;
+                    float priority = newCost;
+                    frontier.insert(next, priority);
+                    cameFrom[next] = current;
+
+                    
+                    
+                }
+            }
+        }
+
+        GameObject current2 = dest;
+        moveNodes.Add(current2);
+        while (current2 != start) {
+            current2 = cameFrom[current2];
+            //Debug.Log(current2);
+            moveNodes.Add(current2);
+        }
+        moveNodes.Reverse();
     }
 
     // Update is called once per frame
     void Update() {
-        if (state == "entering") { //Move downward when first entering the game
-            look_at(gameObject, transform.position - Vector3.up);
-            move_to(transform.position - Vector3.up, speed);
-        }
-        else if (state == "moving") {
-            look_at(gameObject, player.transform.position);
-            if (Time.time - timer > battle_move_frequency) { //If it's time to move again
-                //Movement  
-                if (!movement_chosen) {
-                    //Choose a destination
-                    Vector2 d = Random.insideUnitCircle * battle_move_range;
-                    //Debug.Log(d.magnitude);
-                    destination = new Vector2(transform.position.x + d.x, transform.position.y + d.y);
-                    Vector2 viewport_destination = Camera.main.WorldToViewportPoint(destination);//Destination coordinate in viewport coordinate
-
-                    while (viewport_destination.x < 0 || viewport_destination.x > 1 || viewport_destination.y < 0 || viewport_destination.y > 1) { //If destination is out of boundary
-                        //Repick destination
-                        d = Random.insideUnitCircle * battle_move_range;
-                        destination = new Vector2(transform.position.x + d.x, transform.position.y + d.y);
-                        viewport_destination = Camera.main.WorldToViewportPoint(destination);//Destination coordinate in viewport coordinate
-                    }
-
-                    movement_chosen = true;
-
-                }
-                if (move_to(destination, speed)) {
-                    movement_chosen = false;
-                    timer = Time.time; //Timer reset
-                    state = "shooting"; //Prepare to shoot
-                }
-            }
-        }
-
-        else if (state == "shooting") {
-            look_at(gameObject, player.transform.position);
-            if (!shot) {
-                if (Time.time - timer > shoot_delay) { //If it's time to move again
-                    //Shooting
-                    GameObject t_arrow = Instantiate(arrow, transform.position, transform.rotation) as GameObject;
-                    Quaternion rotation = t_arrow.transform.rotation; //Shortener
-                    rotation = Quaternion.Euler(new Vector3(0, 0, (rotation.eulerAngles.z - accuracy / 2) + Random.value * accuracy));
-                    t_arrow.transform.rotation = rotation;
-                    t_arrow.GetComponent<Rigidbody2D>().velocity = t_arrow.transform.right * arrow_shoot_speed;
-
-                    timer = Time.time;
-                    shot = true;
-                }
-            }
-            if (shot) {
-                if (Time.time - timer > after_shoot_delay) { //After cooldown period
-                    shot = false;
-                    timer = Time.time;
-                    state = "moving";
+        if (moveNodes.Count != 0) {
+            if (move_to(moveNodes[current_dest].transform.position, speed)) {
+                current_dest++;
+                if (current_dest >= moveNodes.Count) {
+                    current_dest = 0;
+                    moveNodes.Reverse();
                 }
             }
         }
@@ -115,13 +99,14 @@ public class Enemy : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0, 0, -Vector2.Angle(new Vector2(1, 0), target - obj.transform.position));
         }
     }
-    //void OnBecameInvisible() {
-    //    state = "moving";
-    //}
-    void OnWillRenderObject() {
-        if (Camera.current == Camera.main && !entered_view) {
-            state = "moving";
-            entered_view = true;
+    void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        for (int i = 0; i < moveNodes.Count; i++) {
+            if (i != 0) {
+                Gizmos.DrawSphere(moveNodes[i].transform.position, 1f);
+                Gizmos.DrawLine(moveNodes[i - 1].transform.position, moveNodes[i].transform.position);
+            }
         }
+        //Debug.Log(transform.TransformPoint(moveNodes[0].transform.position));
     }
 }
