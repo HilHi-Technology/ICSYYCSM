@@ -1,0 +1,35 @@
+TEST PLAN
+
+	Usability - bring others in = Ethan's Job
+		Tasks for testers = Tin 
+		Gameplay - make the game itself, share code/github = Tin's Job
+		Watch them play and take notes = All
+
+	Presentation - powerpoint = J.T.'s Job
+		Feedback - Audience to present to (2 teachers at least) = Alejerando's Job
+			Explicit unbiased results
+		Presentation overvew
+			Introduce us
+			Tell story
+			What did we do
+		Clarity - Simple, clear
+		Interest - Interesting and memorable
+
+	Technical - Find the techy guys = Jon's Job
+		Have them question us
+
+REVISED TEST PLAN
+
+Bring others in to test our game on the 4th.
+	Tin will give them tasks to accomplish
+	Tin will have to make the game itself
+	Everyone will take notes on what struggles the player has
+Make a presentation will be J.T.'s job
+	Alejerando will get at least 2 teachers to overview our presentation, with unbiased results
+	JT shall make sure the presentation includes the following:
+		Introduce us, Tell our story, and tell what we do.
+		The presentation should be clear, interesting and memorable.
+Finally, Jon needs to get some techy guys to question us about the game.
+
+Script the usability testing. -Tin
+
