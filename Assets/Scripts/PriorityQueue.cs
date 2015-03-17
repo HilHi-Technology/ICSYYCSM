@@ -16,12 +16,9 @@ class PriorityQueue<T> {
         if (queue.Count > 1) {
             queue.Add(default(Eppy.Tuple<T, float>));
             int pos = queue.Count - 1;
-            while (pos > 1) {
-                if (n.Item2 < queue[pos/2].Item2) {
-                    queue[pos] = queue[pos/2];
-                } else {
-                    break;
-                }
+            while (pos > 1 && n.Item2 < queue[pos/2].Item2) {
+                queue[pos] = queue[pos/2];
+                pos = pos / 2;
             }
             queue[pos] = n;
         } else {
