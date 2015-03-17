@@ -55,12 +55,23 @@ class PriorityQueue<T> {
             }
         } else {
             while (pos * 2 < queue.Count - 1) {
-                if (queue[pos * 2].Item2 < queue[pos * 2 + 1].Item2) {
+                if (pos * 2 + 1 == queue.Count) {
                     queue[pos] = queue[pos * 2];
-                    pos = pos * 2;
+                }
+                else if (queue[pos * 2].Item2 < queue[pos * 2 + 1].Item2) {
+                    if (last_element.Item2 > queue[pos * 2].Item2) {
+                        queue[pos] = queue[pos * 2];
+                        pos = pos * 2;
+                    } else {
+                        break;
+                    }
                 } else {
-                    queue[pos] = queue[pos * 2 + 1];
-                    pos = pos * 2 + 1;
+                    if (last_element.Item2 > queue[pos * 2 + 1].Item2) {
+                        queue[pos] = queue[pos * 2 + 1];
+                        pos = pos * 2 + 1;
+                    } else {
+                        break;
+                    }
                 }    
             }
             queue[pos] = last_element;
@@ -69,7 +80,7 @@ class PriorityQueue<T> {
     }
 
     public int Count() {
-        return queue.Count - 1;
+        return queue.Count;
     }
     public bool isEmpty() {
         return queue.Count < 1;

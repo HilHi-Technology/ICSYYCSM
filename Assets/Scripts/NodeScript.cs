@@ -17,7 +17,6 @@ public class NodeScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
     void OnDrawGizmos() {
         Gizmos.color = Color.blue;
