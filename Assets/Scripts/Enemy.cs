@@ -11,9 +11,12 @@ public class Enemy : MonoBehaviour {
     private int current_dest; 
     public List<GameObject> moveNodes = new List<GameObject>();
     public float speed;
+    private float waitTimer;
+    private bool isWaiting;
 
     // Use this for initialization
     void Start() {
+        isWaiting = false;
         cameFrom.Add(start, default(GameObject));
         costSoFar.Add(start, 0);
         frontier.insert(start, 0);
@@ -59,12 +62,21 @@ public class Enemy : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (moveNodes.Count != 0) {
-            if (move_to(moveNodes[current_dest].transform.position, speed)) {
-                current_dest++;
-                if (current_dest >= moveNodes.Count) {
-                    current_dest = 0;
-                    moveNodes.Reverse();
+        if (isWaiting) {
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= 3.0f) {
+                waitTimer = 0;
+                isWaiting = false;
+            }
+        } else {
+            if (moveNodes.Count != 0) {
+                if (move_to(moveNodes[current_dest].transform.position, speed)) {
+                    current_dest++;
+                    if (current_dest >= moveNodes.Count) {
+                        current_dest = 0;
+                        moveNodes.Reverse();
+                    }
+                    isWaiting = true;
                 }
             }
         }
