@@ -4,57 +4,63 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
     public GameObject start;
-    public GameObject dest;
-    private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>();
-    Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();
-    Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>();
-    private int current_dest; 
-    public List<GameObject> moveNodes = new List<GameObject>();
-    public float speed;
-    private float waitTimer;
-    private bool isWaiting;
+    public GameObject dest; //destination
+    private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
+
+
+    Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track
+                                                                                           //of the node used to reach the current node. Will be used to reconstruct the path later.
+    Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path
+    private int current_dest; //Used for moving from patrol nodes to patrol nodes
+    public List<GameObject> patrolNodes = new List<GameObject>(); //Store patrol nodes
+    public float speed; //Speed of enemy
+    private float patrolWait; //Wait time between 
+    private bool isWaiting; 
 
     // Use this for initialization
     void Start() {
-        isWaiting = false;
-        cameFrom.Add(start, default(GameObject));
-        costSoFar.Add(start, 0);
-        frontier.insert(start, 0);
-        int c = 0;
-        //Debug.Log(start.GetComponent<NodeScript>().neighbors);
-        while (!frontier.isEmpty()) {
-            //c++;
-            Debug.Log("got here");
-            GameObject current = frontier.get(); //Get the current node
-            List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors
+        isWaiting = false; //Reset the waiting state
 
-            if (current == dest) {
-                Debug.Log("Got GOAL!");
+        
+        //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
+
+        //cameFrom is a dictionary. The key stores the current node, and the value stores the previous node used to reach the current node. 
+        cameFrom.Add(start, default(GameObject)); //The first node doesn't come from anywhere, so default is used to pretty much denotes null
+
+        //costSoFar's key denotes current node, while the value stores the cost in distance it takes to get from the start to the node.
+        costSoFar.Add(start, 0); 
+
+        //frontier is a priority queue, which basically sorts whatever is put into it in order from smallest to largest. Read up on A* to see why this is used.
+        //1st parameter of insert() is the node, while the 2nd parameter is the cost it takes to get there.
+        frontier.insert(start, 0);
+
+        while (!frontier.isEmpty()) {
+            GameObject current = frontier.get(); //Get the current node to expand upon
+            List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
+
+            if (current == dest) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
                 break; //Found our destination
                 
             }
-            //frontier.insert(current, 0);
-            Debug.Log("Current: " + current);
-            foreach (GameObject next in neighbors) { //Go through all neighbors
-                float newCost = costSoFar[current] + Vector2.Distance(current.transform.position, next.transform.position); //Calculate cost
-                Debug.Log("Neighbors: " + next + " Cost: " + newCost);
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) { //If the frontier has already been expanded or we found a faster path
-                costSoFar[next] = newCost;
-                //float priority = newCost;
-                //Debug.Log(!costSoFar.ContainsKey(next));
-                frontier.insert(next, newCost);
-                cameFrom[next] = current;
+            foreach (GameObject next in neighbors) { //Go through all neighbors in the current frontier node
+                float newCost = costSoFar[current] + Vector2.Distance(current.transform.position, next.transform.position); //Calculate cost to reach each neighbor
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) { //If the frontier isn't already expanded or we found a faster path.
+                costSoFar[next] = newCost; //Give the neighbor node a cost.
+                frontier.insert(next, newCost); 
+                cameFrom[next] = current; //The neighbor's node came from the current node
                 }
             }
         }
-        GameObject current2 = dest;
-        moveNodes.Add(current2);
-        while (current2 != start) {
-            current2 = cameFrom[current2];
-            //Debug.Log(current2);
-            moveNodes.Add(current2);
+
+        //PATH RECONSTRUCTION
+        //Path is reconstructed backward, starting from the goal and trace its way to the start using cost so far. Patrol nodes are added along the paths for the enemy to move toward.
+        GameObject p_current = dest;
+        patrolNodes.Add(p_current);
+        while (p_current != start) { //Add nodes until we reach the start.
+            p_current = cameFrom[p_current];
+            patrolNodes.Add(p_current);
         }
-        moveNodes.Reverse();
+        patrolNodes.Reverse(); //Reverse the patrol nodes because they are added in backward .
 
 
 
@@ -62,21 +68,21 @@ public class Enemy : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (isWaiting) {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= 3.0f) {
-                waitTimer = 0;
+        if (isWaiting) { 
+            patrolWait += Time.deltaTime; //Increment the timer
+            if (patrolWait >= 3.0f) { 
+                patrolWait = 0;
                 isWaiting = false;
             }
         } else {
-            if (moveNodes.Count != 0) {
-                if (move_to(moveNodes[current_dest].transform.position, speed)) {
-                    current_dest++;
-                    if (current_dest >= moveNodes.Count) {
-                        current_dest = 0;
-                        moveNodes.Reverse();
+            if (patrolNodes.Count != 0) {
+                if (move_to(patrolNodes[current_dest].transform.position, speed)) { //move toward the next node and return true if it reaches the node
+                    isWaiting = true; //Wait a bit before going to the next dest
+                    current_dest++; //Set the next destination
+                    if (current_dest >= patrolNodes.Count) { //If the final destination is reached
+                        current_dest = 0; 
+                        patrolNodes.Reverse(); //Reverse the destination
                     }
-                    isWaiting = true;
                 }
             }
         }
@@ -112,16 +118,20 @@ public class Enemy : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0, 0, -Vector2.Angle(new Vector2(1, 0), target - obj.transform.position));
         }
     }
+
+    //Debug stuffs, don't worry about it
     void OnDrawGizmos() {
+        //Patrol nodes
         Gizmos.color = Color.red;
-        for (int i = 0; i < moveNodes.Count; i++) {
+        for (int i = 0; i < patrolNodes.Count; i++) {
             if (i != 0) {
-                Gizmos.DrawSphere(moveNodes[i].transform.position, 1f);
-                Gizmos.DrawLine(moveNodes[i - 1].transform.position, moveNodes[i].transform.position);
+                Gizmos.DrawSphere(patrolNodes[i].transform.position, 1f);
+                Gizmos.DrawLine(patrolNodes[i - 1].transform.position, patrolNodes[i].transform.position);
             }
         }
-        Gizmos.color = Color.green;
 
+        //Frontier nodes
+        Gizmos.color = Color.green;
         for (int i = 0; i < frontier.Count(); i++) {
             if (i != 0) {
                 Gizmos.DrawSphere(frontier.queue[i].Item1.transform.position, 0.8f);

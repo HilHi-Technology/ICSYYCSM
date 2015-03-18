@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 class PriorityQueue<T> {
-    /*This priority queue uses Binary Heap. Google it for more info*/
-    //Reminder: queue[0] is always default(T) and keep it that way
+    /* This priority queue uses Binary Heap. Google it for more info.
+     * Sources: http://www.cs.cmu.edu/~adamchik/15-121/lectures/Binary%20Heaps/heaps.html
+     *          http://lcm.csa.iisc.ernet.in/dsa/node138.html
+     *          
+     * Reminder: queue[0] is always default(T) and keep it that way 
+     */
     public List<Eppy.Tuple<T, float>> queue;
     public PriorityQueue() {
         this.queue = new List<Eppy.Tuple<T, float>>();

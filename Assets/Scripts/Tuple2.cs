@@ -4,12 +4,15 @@
 // Used Chapter 3 in http://functional-programming.net/ as a starting point.
 //
 // Note: .NET 4.0 Tuples are immutable classes so they're *slightly* different.
+//
+// Credit: https://gist.github.com/michaelbartnett/5652076
 // ----------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 
 namespace Eppy {
+
     /// <summary>
     /// Represents a functional tuple that can be used to store
     /// two values of different types inside one object.
