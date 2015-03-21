@@ -21,6 +21,8 @@ public class MeshDrawScript : MonoBehaviour {
         previousPoint = transform.position; //Initialize previous point, but it won't be used until it receives another 
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
+            Mesh sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
+            Destroy(sharedMesh);
             Destroy(obj);
         }
         DrawList.Clear();
