@@ -84,7 +84,7 @@ class PriorityQueue<T> {
         return queue.Count;
     }
     public bool isEmpty() {
-        return queue.Count < 1;
+        return queue.Count <= 1;
     }
     public void print() {
         //foreach (Eppy.Tuple<T, float> obj in queue) {

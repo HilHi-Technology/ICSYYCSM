@@ -42,7 +42,7 @@ public class MeshDrawScript : MonoBehaviour {
         vList.Add(vList[0]); //Add the last vertex in the series to complete the full circle of light
 
 
-        foreach (Vector2 v in vList) { //For all vectors
+        foreach (Vector2 v in vList) { //For all vertices
             if (previousPoint != (Vector2)transform.position) { //Skip drawing on the first vertex, because there are not enough points to draw a triangle
                 Debug.DrawLine(previousPoint, v, Color.red); //Draw debug lines connecting all the vertices
 

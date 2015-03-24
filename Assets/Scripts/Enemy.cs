@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
-    public GameObject start;
+    private GameObject start;
     public GameObject dest; //destination
     private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
 
@@ -15,13 +15,58 @@ public class Enemy : MonoBehaviour {
     public List<GameObject> patrolNodes = new List<GameObject>(); //Store patrol nodes
     public float speed; //Speed of enemy
     private float patrolWait; //Wait time between 
-    private bool isWaiting; 
-
+    private bool isWaiting;
+    private NodeScript[] allNodes;
+    public LayerMask pathMask;
     // Use this for initialization
     void Start() {
         isWaiting = false; //Reset the waiting state
 
+        allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
+        Debug.Log(allNodes);
+        GameObject closestNodeToPlayer = default(GameObject);
+        float closestNodeToPlayerDist = Mathf.Infinity;
+
+        foreach (NodeScript nodeScr in allNodes) {
+            GameObject node = nodeScr.gameObject;
+            //Debug.Log(node);
+            float distance = (node.transform.position - transform.position).magnitude;
+            RaycastHit2D ray = Physics2D.Raycast(transform.position, node.transform.position - transform.position, distance, pathMask);
+            //Debug.Log(ray.collider);
+            if (ray.collider == null) { //If ray reached the node without hitting a wall
+                if (distance < closestNodeToPlayerDist) {
+                    closestNodeToPlayerDist = distance;
+                    closestNodeToPlayer = node;
+                }
+            }
+        }
+        start = closestNodeToPlayer;
+
+        GameObject destNode = Instantiate(new GameObject(), dest.transform.position, Quaternion.identity) as GameObject;
+        NodeScript destScript = destNode.AddComponent<NodeScript>();
+
+        GameObject closestNodeToDest = default(GameObject);
+        float closestNodeToDestDist = Mathf.Infinity;
+        foreach (NodeScript nodeScr in allNodes) {
+            GameObject node = nodeScr.gameObject;
+            float distance = (node.transform.position - destNode.transform.position).magnitude;
+            RaycastHit2D ray = Physics2D.Raycast(transform.position, node.transform.position - destNode.transform.position, distance, pathMask);
+            if (ray.collider == null) { //If ray reached the node without hitting a wall
+                if (distance < closestNodeToDestDist) {
+                    closestNodeToDestDist = distance;
+                    closestNodeToDest = node;
+                }
+            }
+        }
+        dest = destNode;
+
+        NodeScript nodeScript = closestNodeToDest.GetComponent<NodeScript>();
+
+        nodeScript.neighbors.Add(destNode);
+        destScript.neighbors.Add(closestNodeToDest);
         
+        
+
         //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
 
         //cameFrom is a dictionary. The key stores the current node, and the value stores the previous node used to reach the current node. 
@@ -36,6 +81,7 @@ public class Enemy : MonoBehaviour {
 
         while (!frontier.isEmpty()) {
             GameObject current = frontier.get(); //Get the current node to expand upon
+            Debug.Log(current);
             List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
 
             if (current == dest) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
@@ -70,7 +116,7 @@ public class Enemy : MonoBehaviour {
     void Update() {
         if (isWaiting) { 
             patrolWait += Time.deltaTime; //Increment the timer
-            if (patrolWait >= 3.0f) { 
+            if (patrolWait >= 0f) { 
                 patrolWait = 0;
                 isWaiting = false;
             }
