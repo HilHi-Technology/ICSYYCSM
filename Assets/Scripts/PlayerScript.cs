@@ -103,4 +103,22 @@ public class PlayerScript : MonoBehaviour {
 
 
     }
-}
+
+
+
+		
+		
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
