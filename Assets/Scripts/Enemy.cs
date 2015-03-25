@@ -93,6 +93,7 @@ public class Enemy : MonoBehaviour {
     }
 
     List<Vector2> AStar(Vector2 destination, NodeScript[] roomNodes, LayerMask mask) {
+        List<Vector2> pathVectors = new List<Vector2>();
         List<GameObject> pathNodes= new List<GameObject>(); //Store patrol nodes
         PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
         Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track
@@ -101,6 +102,13 @@ public class Enemy : MonoBehaviour {
 
         GameObject startNode = Instantiate(new GameObject(), transform.position, Quaternion.identity) as GameObject;
         NodeScript startScript = startNode.AddComponent<NodeScript>();
+
+        if (Physics2D.Raycast(transform.position, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) { //Check if the player has a direct path to the destination
+            Debug.Log("got here");
+            pathVectors.Add(transform.position);
+            pathVectors.Add(destination);
+            return pathVectors;
+        }
 
         //Finding best starting node
         foreach (NodeScript nodeScr in roomNodes) {
@@ -172,12 +180,12 @@ public class Enemy : MonoBehaviour {
         GameObject p_current = destNode;
         pathNodes.Add(p_current);
         while (p_current != startNode) { //Add nodes until we reach the start.
-            Debug.Log(p_current);
+            //Debug.Log(p_current);
             p_current = cameFrom[p_current];
             pathNodes.Add(p_current);
         }
         pathNodes.Reverse(); //Reverse the patrol nodes because they are added in backward .
-        List<Vector2> pathVectors = new List<Vector2>();
+        
 
         foreach (GameObject node in pathNodes) {
             pathVectors.Add(node.transform.position);
