@@ -45,25 +45,21 @@ public class Enemy : MonoBehaviour {
         GameObject destNode = Instantiate(new GameObject(), dest.transform.position, Quaternion.identity) as GameObject;
         NodeScript destScript = destNode.AddComponent<NodeScript>();
 
-        GameObject closestNodeToDest = default(GameObject);
-        float closestNodeToDestDist = Mathf.Infinity;
+       
+
         foreach (NodeScript nodeScr in allNodes) {
             GameObject node = nodeScr.gameObject;
-            float distance = (node.transform.position - destNode.transform.position).magnitude;
-            RaycastHit2D ray = Physics2D.Raycast(transform.position, node.transform.position - destNode.transform.position, distance, pathMask);
+            float distance = (destNode.transform.position - node.transform.position).magnitude;
+            //Debug.Log(distance);
+            RaycastHit2D ray = Physics2D.Raycast(destNode.transform.position, node.transform.position - destNode.transform.position, distance, pathMask);
+            
             if (ray.collider == null) { //If ray reached the node without hitting a wall
-                if (distance < closestNodeToDestDist) {
-                    closestNodeToDestDist = distance;
-                    closestNodeToDest = node;
-                }
+                Debug.Log("got here");
+                nodeScr.neighbors.Add(destNode);
+                destScript.neighbors.Add(node);
             }
         }
         dest = destNode;
-
-        NodeScript nodeScript = closestNodeToDest.GetComponent<NodeScript>();
-
-        nodeScript.neighbors.Add(destNode);
-        destScript.neighbors.Add(closestNodeToDest);
         
         
 
@@ -81,7 +77,7 @@ public class Enemy : MonoBehaviour {
 
         while (!frontier.isEmpty()) {
             GameObject current = frontier.get(); //Get the current node to expand upon
-            Debug.Log(current);
+            //Debug.Log(current);
             List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
 
             if (current == dest) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
@@ -103,8 +99,10 @@ public class Enemy : MonoBehaviour {
         GameObject p_current = dest;
         patrolNodes.Add(p_current);
         while (p_current != start) { //Add nodes until we reach the start.
+            Debug.Log(p_current);
             p_current = cameFrom[p_current];
             patrolNodes.Add(p_current);
+            
         }
         patrolNodes.Reverse(); //Reverse the patrol nodes because they are added in backward .
 
