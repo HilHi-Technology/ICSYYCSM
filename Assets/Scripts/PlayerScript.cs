@@ -106,6 +106,8 @@ public class PlayerScript : MonoBehaviour {
 
 
 
+
+
 		
 		
 	}
