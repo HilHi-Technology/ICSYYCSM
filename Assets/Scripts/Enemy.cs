@@ -23,13 +23,14 @@ public class Enemy : MonoBehaviour {
         isWaiting = false; //Reset the waiting state
 
         allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
-        patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
+        
 
 
     }
 
     // Update is called once per frame
     void Update() {
+        patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
         if (isWaiting) {
             patrolWait += Time.deltaTime; //Increment the timer
             if (patrolWait >= 0f) {
@@ -100,22 +101,21 @@ public class Enemy : MonoBehaviour {
         //of the node used to reach the current node. Will be used to reconstruct the path later.
         Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path
 
-        GameObject startNode = Instantiate(new GameObject(), transform.position, Quaternion.identity) as GameObject;
-        NodeScript startScript = startNode.AddComponent<NodeScript>();
-
-        if (Physics2D.Raycast(transform.position, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) { //Check if the player has a direct path to the destination
-            Debug.Log("got here");
+        if (Physics2D.CircleCast(transform.position, 0.5f, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) { //Check if the player has a direct path to the destination
             pathVectors.Add(transform.position);
             pathVectors.Add(destination);
             return pathVectors;
         }
+        GameObject startNode = new GameObject();
+        startNode.transform.position = transform.position;
+        NodeScript startScript = startNode.AddComponent<NodeScript>();
 
         //Finding best starting node
         foreach (NodeScript nodeScr in roomNodes) {
             GameObject node = nodeScr.gameObject;
             //Debug.Log(node);
             float distance = (node.transform.position - transform.position).magnitude;
-            RaycastHit2D ray = Physics2D.Raycast(transform.position, node.transform.position - transform.position, distance, mask);
+            RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.5f, node.transform.position - transform.position, distance, mask);
             //Debug.Log(ray.collider);
             if (ray.collider == null) { //If ray reached the node without hitting a wall
                 nodeScr.neighbors.Add(startNode);
@@ -123,7 +123,8 @@ public class Enemy : MonoBehaviour {
             }
         }
 
-        GameObject destNode = Instantiate(new GameObject(), destination, Quaternion.identity) as GameObject;
+        GameObject destNode = new GameObject();
+        destNode.transform.position = destination;
         NodeScript destScript = destNode.AddComponent<NodeScript>();
 
 
@@ -132,7 +133,7 @@ public class Enemy : MonoBehaviour {
             GameObject node = nodeScr.gameObject;
             float distance = (destination - (Vector2)node.transform.position).magnitude;
             //Debug.Log(distance);
-            RaycastHit2D ray = Physics2D.Raycast(destination, (Vector2)node.transform.position - destination, distance, mask);
+            RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
 
             if (ray.collider == null) { //If ray reached the node without hitting a wall
                 //Debug.Log("got here");
@@ -198,8 +199,9 @@ public class Enemy : MonoBehaviour {
                 node.neighbors.Remove(startNode);
             }
         }
-        Destroy(destNode);
         Destroy(startNode);
+        Destroy(destNode);
+        //Debug.Log(destNode);
 
         return pathVectors;
     }
