@@ -14,13 +14,16 @@ public class GameOverScript : MonoBehaviour {
                                 "Retry!")
             ) {
             // Reload the level
-            Application.LoadLevel("test 2");
+            Application.LoadLevel(Application.loadedLevel);
+            Time.timeScale = 1;
+             
         }
 
         // Center in X, 2/3 of the height in Y
         if (GUI.Button(new Rect(Screen.width / 2 - (buttonWidth / 2), (2 * Screen.height / 3) - (buttonHeight / 2), buttonWidth, buttonHeight),"Back to menu")) {
                 // Reload the level
                 Application.LoadLevel("Title");
+                Time.timeScale = 1;
         }
     }
 }

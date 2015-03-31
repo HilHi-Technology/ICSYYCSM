@@ -26,7 +26,7 @@ public class Laser : MonoBehaviour {         //Still no idea
 
 	
 
-		Debug.Log ("Collision: " + collider.name + "#triggered");                                              //Prints out Collsion, the name of the tag that collided, and #trigger
+		//Debug.Log ("Collision: " + collider.name + "#triggered");                                              //Prints out Collsion, the name of the tag that collided, and #trigger
 		if (collider.tag == "Player") 
 		{
 			collider.gameObject.SendMessage("AlarmOn",null,SendMessageOptions.DontRequireReceiver);            //sends out a message
