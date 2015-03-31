@@ -94,6 +94,7 @@ public class Enemy : MonoBehaviour {
     }
 
     List<Vector2> AStar(Vector2 destination, NodeScript[] roomNodes, LayerMask mask) {
+        //Physics2D.raycastsStartInColliders = false;
         List<Vector2> pathVectors = new List<Vector2>();
         List<GameObject> pathNodes= new List<GameObject>(); //Store patrol nodes
         PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
@@ -106,6 +107,34 @@ public class Enemy : MonoBehaviour {
             pathVectors.Add(destination);
             return pathVectors;
         }
+
+
+        GameObject destNode = new GameObject();
+        destNode.transform.position = destination;
+        NodeScript destScript = destNode.AddComponent<NodeScript>();
+
+
+        //Destination node creation
+        bool foundGoal = false;
+        foreach (NodeScript nodeScr in roomNodes) {
+            GameObject node = nodeScr.gameObject;
+            float distance = (destination - (Vector2)node.transform.position).magnitude;
+            //Debug.Log(distance);
+            RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
+
+            if (ray.collider == null) { //If ray reached the node without hitting a wall
+                //Debug.Log("got here");
+                foundGoal = true;
+                nodeScr.neighbors.Add(destNode);
+                destScript.neighbors.Add(node);
+            }
+        }
+        if (!foundGoal) {
+            Destroy(destNode);
+            pathVectors.Clear();
+            return pathVectors;
+        }
+
         GameObject startNode = new GameObject();
         startNode.transform.position = transform.position;
         NodeScript startScript = startNode.AddComponent<NodeScript>();
@@ -123,26 +152,9 @@ public class Enemy : MonoBehaviour {
             }
         }
 
-        GameObject destNode = new GameObject();
-        destNode.transform.position = destination;
-        NodeScript destScript = destNode.AddComponent<NodeScript>();
-
-
-        //Destination node creation
-        foreach (NodeScript nodeScr in roomNodes) {
-            GameObject node = nodeScr.gameObject;
-            float distance = (destination - (Vector2)node.transform.position).magnitude;
-            //Debug.Log(distance);
-            RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
-
-            if (ray.collider == null) { //If ray reached the node without hitting a wall
-                //Debug.Log("got here");
-                nodeScr.neighbors.Add(destNode);
-                destScript.neighbors.Add(node);
-            }
-        }
-        //destination = destNode;
-
+        //foreach (GameObject node in destScript.neighbors) {
+        //    Debug.Log(node);
+        //}
 
 
         //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
@@ -163,6 +175,7 @@ public class Enemy : MonoBehaviour {
             List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
 
             if (current == destNode) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
+                
                 break; //Found our destination
 
             }
@@ -175,6 +188,7 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
+
 
         //PATH RECONSTRUCTION
         //Path is reconstructed backward, starting from the goal and trace its way to the start using cost so far. Patrol nodes are added along the paths for the enemy to move toward.
