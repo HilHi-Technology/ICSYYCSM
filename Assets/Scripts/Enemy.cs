@@ -3,67 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
-    public GameObject start;
-    public GameObject dest;
-    private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>();
-    Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();
-    Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>();
-    private int current_dest; 
-    public List<GameObject> moveNodes = new List<GameObject>();
-    public float speed;
+    //private GameObject start;
+    public GameObject dest; //destination
+    //private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
 
+
+    //Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track
+    ////of the node used to reach the current node. Will be used to reconstruct the path later.
+    //Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path
+    private int current_dest; //Used for moving from patrol nodes to patrol nodes
+    public List<Vector2> patrolNodes = new List<Vector2>(); //Store patrol nodes
+    public float speed; //Speed of enemy
+    private float patrolWait; //Wait time between 
+    private bool isWaiting;
+    private NodeScript[] allNodes;
+    public LayerMask pathMask;
     // Use this for initialization
     void Start() {
-        cameFrom.Add(start, default(GameObject));
-        costSoFar.Add(start, 0);
-        frontier.insert(start, 0);
-        int i = 0;
-        //Debug.Log(start.GetComponent<NodeScript>().neighbors);
-        while (i < 3) {
-            i++;
-            Debug.Log("got here");
-            GameObject current = frontier.get();
-            List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors
+        isWaiting = false; //Reset the waiting state
 
-            if (current == dest) {
-                break; //Found our destination
-            }
-            Debug.Log("Current: " + current);
-
-            foreach (GameObject next in neighbors) {
-                
-                float newCost = costSoFar[current] + Vector2.Distance(current.transform.position, next.transform.position);
-                Debug.Log("Neighbors: " + next + " Cost: " + newCost);
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) {
-                    costSoFar[next] = newCost;
-                    float priority = newCost;
-                    frontier.insert(next, priority);
-                    cameFrom[next] = current;
-
-                    
-                    
-                }
-            }
-        }
-
-        GameObject current2 = dest;
-        moveNodes.Add(current2);
-        while (current2 != start) {
-            current2 = cameFrom[current2];
-            //Debug.Log(current2);
-            moveNodes.Add(current2);
-        }
-        moveNodes.Reverse();
+        allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
     }
 
     // Update is called once per frame
     void Update() {
-        if (moveNodes.Count != 0) {
-            if (move_to(moveNodes[current_dest].transform.position, speed)) {
-                current_dest++;
-                if (current_dest >= moveNodes.Count) {
-                    current_dest = 0;
-                    moveNodes.Reverse();
+        patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
+        if (isWaiting) {
+            patrolWait += Time.deltaTime; //Increment the timer
+            if (patrolWait >= 0f) {
+                patrolWait = 0;
+                isWaiting = false;
+            }
+        } else {
+            if (patrolNodes.Count != 0) {
+                if (move_to(patrolNodes[current_dest], speed)) { //move toward the next node and return true if it reaches the node
+                    isWaiting = true; //Wait a bit before going to the next dest
+                    current_dest++; //Set the next destination
+                    if (current_dest >= patrolNodes.Count) { //If the final destination is reached
+                        current_dest = 0;
+                        patrolNodes.Reverse(); //Reverse the destination
+                    }
                 }
             }
         }
@@ -77,8 +56,7 @@ public class Enemy : MonoBehaviour {
             Vector2 movement = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
             transform.position = new Vector3(movement.x, movement.y, transform.position.z); //Move toward destination
             return false;
-        }
-        else {
+        } else {
             return true; //Destination reached
         }
     }
@@ -99,14 +77,140 @@ public class Enemy : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0, 0, -Vector2.Angle(new Vector2(1, 0), target - obj.transform.position));
         }
     }
+
+    //Debug stuffs, don't worry about it
     void OnDrawGizmos() {
+        //Patrol nodes
         Gizmos.color = Color.red;
-        for (int i = 0; i < moveNodes.Count; i++) {
+        for (int i = 0; i < patrolNodes.Count; i++) {
             if (i != 0) {
-                Gizmos.DrawSphere(moveNodes[i].transform.position, 1f);
-                Gizmos.DrawLine(moveNodes[i - 1].transform.position, moveNodes[i].transform.position);
+                //Gizmos.DrawSphere(patrolNodes[i].transform.position, 1f);
+                Gizmos.DrawLine(patrolNodes[i - 1], patrolNodes[i]);
             }
         }
-        //Debug.Log(transform.TransformPoint(moveNodes[0].transform.position));
+    }
+
+    List<Vector2> AStar(Vector2 destination, NodeScript[] roomNodes, LayerMask mask) {
+        //Physics2D.raycastsStartInColliders = false;
+        List<Vector2> pathVectors = new List<Vector2>(); //Will return this. Contains all the vectors needed to generate the path. Derived from the nodes themselves
+        List<GameObject> pathNodes= new List<GameObject>(); //Store path nodes
+        PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Priority queue used to find the shortest path.
+        Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track of the node used to reach the current node. Will be used to reconstruct the path later.
+        Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path. Used in conjunction with priority queue to find the shortest path.
+
+        if (Physics2D.CircleCast(transform.position, 0.5f, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) {
+            //Check if the player has a direct path to the destination and return the straight path to goal if so.
+            pathVectors.Add(transform.position);
+            pathVectors.Add(destination);
+            return pathVectors; 
+        }
+
+        //Create new destination node.
+        GameObject destNode = new GameObject(); 
+        destNode.transform.position = destination;
+        NodeScript destScript = destNode.AddComponent<NodeScript>();
+        bool foundGoal = false; //To check whether there is a path to the destination.
+
+        foreach (NodeScript nodeScr in roomNodes) {
+            //Go through all the premade room nodes to see if there is a path to the goal
+            GameObject node = nodeScr.gameObject;
+            float distance = (destination - (Vector2)node.transform.position).magnitude;
+            //Debug.Log(distance);
+            RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
+
+            if (ray.collider == null) { //If ray reached the node without hitting a wall
+                foundGoal = true;
+                //Connect the nodes
+                nodeScr.neighbors.Add(destNode);
+                destScript.neighbors.Add(node);
+            }
+        }
+        if (!foundGoal) {
+            //If there isn't a path to the goal, cleanup and return an empty path.
+            Destroy(destNode);
+            pathVectors.Clear();
+            return pathVectors;
+        }
+
+        //Creating a new start node
+        GameObject startNode = new GameObject();
+        startNode.transform.position = transform.position;
+        NodeScript startScript = startNode.AddComponent<NodeScript>();
+
+        foreach (NodeScript nodeScr in roomNodes) {
+            //Connect the start node with any possible room nodes.
+            GameObject node = nodeScr.gameObject;
+            float distance = (node.transform.position - transform.position).magnitude;
+            RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.5f, node.transform.position - transform.position, distance, mask);
+            if (ray.collider == null) { //If ray reached the node without hitting a wall
+                //Connect the nodes
+                nodeScr.neighbors.Add(startNode);
+                startScript.neighbors.Add(node);
+            }
+        }
+
+
+        //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
+
+        //cameFrom is a dictionary. The key stores the current node, and the value stores the previous node used to reach the current node. 
+        cameFrom.Add(startNode, default(GameObject)); //The first node doesn't come from anywhere, so default is used to pretty much denotes null
+
+        //costSoFar's key denotes current node, while the value stores the cost in distance it takes to get from the start to the node.
+        costSoFar.Add(startNode, 0);
+
+        //frontier is a priority queue, which basically sorts whatever is put into it in order from smallest to largest. Read up on A* to see why this is used.
+        //1st parameter of insert() is the node, while the 2nd parameter is the cost it takes to get there.
+        frontier.insert(startNode, 0);
+
+        while (!frontier.isEmpty()) {
+            GameObject current = frontier.get(); //Get the current node to expand upon
+            //Debug.Log(current);
+            List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
+
+            if (current == destNode) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
+                
+                break; //Found our destination
+
+            }
+            foreach (GameObject next in neighbors) { //Go through all neighbors in the current frontier node
+                float newCost = costSoFar[current] + Vector2.Distance(current.transform.position, next.transform.position); //Calculate cost to reach each neighbor
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) { //If the frontier isn't already expanded or we found a faster path.
+                    costSoFar[next] = newCost; //Give the neighbor node a cost.
+                    frontier.insert(next, newCost);
+                    cameFrom[next] = current; //The neighbor's node came from the current node
+                }
+            }
+        }
+
+
+        //PATH RECONSTRUCTION
+        //Path is reconstructed backward, starting from the goal and trace its way to the start using cost so far. Patrol nodes are added along the paths for the enemy to move toward.
+        GameObject p_current = destNode;
+        pathNodes.Add(p_current);
+        while (p_current != startNode) { //Add nodes until we reach the start.
+            //Debug.Log(p_current);
+            p_current = cameFrom[p_current];
+            pathNodes.Add(p_current);
+        }
+        pathNodes.Reverse(); //Reverse the patrol nodes because they are added in backward .
+        
+
+        foreach (GameObject node in pathNodes) {
+            //Derive path vectors from the nodes.
+            pathVectors.Add(node.transform.position);
+        }
+        foreach (NodeScript node in allNodes) {
+            //Disconnect destination node and start node from the rest.
+            if (node.neighbors.Contains(destNode)) {
+                node.neighbors.Remove(destNode);
+            }
+            if (node.neighbors.Contains(startNode)) {
+                node.neighbors.Remove(startNode);
+            }
+        }
+        Destroy(startNode);
+        Destroy(destNode);
+
+        return pathVectors;
     }
 }

@@ -15,6 +15,7 @@ public class PlayerScript : MonoBehaviour {
     private GUIText youWonText;
     public float speed; //How fast the player moves
 
+
     // Use this for initialization
 	void Start () {
         Application.targetFrameRate = 1;
