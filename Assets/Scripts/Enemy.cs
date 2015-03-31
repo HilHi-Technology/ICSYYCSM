@@ -95,66 +95,62 @@ public class Enemy : MonoBehaviour {
 
     List<Vector2> AStar(Vector2 destination, NodeScript[] roomNodes, LayerMask mask) {
         //Physics2D.raycastsStartInColliders = false;
-        List<Vector2> pathVectors = new List<Vector2>();
-        List<GameObject> pathNodes= new List<GameObject>(); //Store patrol nodes
-        PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
-        Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track
-        //of the node used to reach the current node. Will be used to reconstruct the path later.
-        Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path
+        List<Vector2> pathVectors = new List<Vector2>(); //Will return this. Contains all the vectors needed to generate the path. Derived from the nodes themselves
+        List<GameObject> pathNodes= new List<GameObject>(); //Store path nodes
+        PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Priority queue used to find the shortest path.
+        Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();//Keeps track of paths for pathfinding. More specifically keeps track of the node used to reach the current node. Will be used to reconstruct the path later.
+        Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path. Used in conjunction with priority queue to find the shortest path.
 
-        if (Physics2D.CircleCast(transform.position, 0.5f, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) { //Check if the player has a direct path to the destination
+        if (Physics2D.CircleCast(transform.position, 0.5f, destination - (Vector2)transform.position, Vector2.Distance(destination, transform.position), mask).collider == null) {
+            //Check if the player has a direct path to the destination and return the straight path to goal if so.
             pathVectors.Add(transform.position);
             pathVectors.Add(destination);
-            return pathVectors;
+            return pathVectors; 
         }
 
-
-        GameObject destNode = new GameObject();
+        //Create new destination node.
+        GameObject destNode = new GameObject(); 
         destNode.transform.position = destination;
         NodeScript destScript = destNode.AddComponent<NodeScript>();
+        bool foundGoal = false; //To check whether there is a path to the destination.
 
-
-        //Destination node creation
-        bool foundGoal = false;
         foreach (NodeScript nodeScr in roomNodes) {
+            //Go through all the premade room nodes to see if there is a path to the goal
             GameObject node = nodeScr.gameObject;
             float distance = (destination - (Vector2)node.transform.position).magnitude;
             //Debug.Log(distance);
             RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
 
             if (ray.collider == null) { //If ray reached the node without hitting a wall
-                //Debug.Log("got here");
                 foundGoal = true;
+                //Connect the nodes
                 nodeScr.neighbors.Add(destNode);
                 destScript.neighbors.Add(node);
             }
         }
         if (!foundGoal) {
+            //If there isn't a path to the goal, cleanup and return an empty path.
             Destroy(destNode);
             pathVectors.Clear();
             return pathVectors;
         }
 
+        //Creating a new start node
         GameObject startNode = new GameObject();
         startNode.transform.position = transform.position;
         NodeScript startScript = startNode.AddComponent<NodeScript>();
 
-        //Finding best starting node
         foreach (NodeScript nodeScr in roomNodes) {
+            //Connect the start node with any possible room nodes.
             GameObject node = nodeScr.gameObject;
-            //Debug.Log(node);
             float distance = (node.transform.position - transform.position).magnitude;
             RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.5f, node.transform.position - transform.position, distance, mask);
-            //Debug.Log(ray.collider);
             if (ray.collider == null) { //If ray reached the node without hitting a wall
+                //Connect the nodes
                 nodeScr.neighbors.Add(startNode);
                 startScript.neighbors.Add(node);
             }
         }
-
-        //foreach (GameObject node in destScript.neighbors) {
-        //    Debug.Log(node);
-        //}
 
 
         //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
@@ -203,9 +199,11 @@ public class Enemy : MonoBehaviour {
         
 
         foreach (GameObject node in pathNodes) {
+            //Derive path vectors from the nodes.
             pathVectors.Add(node.transform.position);
         }
         foreach (NodeScript node in allNodes) {
+            //Disconnect destination node and start node from the rest.
             if (node.neighbors.Contains(destNode)) {
                 node.neighbors.Remove(destNode);
             }
@@ -215,7 +213,6 @@ public class Enemy : MonoBehaviour {
         }
         Destroy(startNode);
         Destroy(destNode);
-        //Debug.Log(destNode);
 
         return pathVectors;
     }
