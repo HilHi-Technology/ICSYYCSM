@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour {
 	void Start () {
         Application.targetFrameRate = 1;
         youWonText = youWon.GetComponent<GUIText>();
+        Application.targetFrameRate = 60;
 	}
 
     

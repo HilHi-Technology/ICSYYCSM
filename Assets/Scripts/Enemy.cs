@@ -13,21 +13,27 @@ public class Enemy : MonoBehaviour {
     //Dictionary<GameObject, float> costSoFar = new Dictionary<GameObject, float>(); //Costs in distance for a path
     private int current_dest; //Used for moving from patrol nodes to patrol nodes
     public List<Vector2> patrolNodes = new List<Vector2>(); //Store patrol nodes
+    public Vector2 target;
     public float speed; //Speed of enemy
     private float patrolWait; //Wait time between 
     private bool isWaiting;
     static public NodeScript[] allNodes;
     public LayerMask pathMask;
+    public GameObject player;
     // Use this for initialization
     void Awake() {
         isWaiting = false; //Reset the waiting state
+        target = default(Vector2);
 
         allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
+        //Debug.Log(Vector2.Angle(new Vector2(0, 0), new Vector2(0, 2)));
     }
 
     // Update is called once per frame
     void Update() {
         patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
+        target = patrolNodes[current_dest];
+        ConeOfVision(target - (Vector2)transform.position, 45, 4, player, pathMask);
         if (isWaiting) {
             patrolWait += Time.deltaTime; //Increment the timer
             if (patrolWait >= 0f) {
@@ -36,7 +42,8 @@ public class Enemy : MonoBehaviour {
             }
         } else {
             if (patrolNodes.Count != 0) {
-                if (move_to(patrolNodes[current_dest], speed)) { //move toward the next node and return true if it reaches the node
+                look_at(gameObject, target);
+                if (move_to(target, speed)) { //move toward the next node and return true if it reaches the node
                     isWaiting = true; //Wait a bit before going to the next dest
                     current_dest++; //Set the next destination
                     if (current_dest >= patrolNodes.Count) { //If the final destination is reached
@@ -85,7 +92,7 @@ public class Enemy : MonoBehaviour {
         for (int i = 0; i < patrolNodes.Count; i++) {
             if (i != 0) {
                 //Gizmos.DrawSphere(patrolNodes[i].transform.position, 1f);
-                Gizmos.DrawLine(patrolNodes[i - 1], patrolNodes[i]);
+                //Gizmos.DrawLine(patrolNodes[i - 1], patrolNodes[i]);
             }
         }
     }
@@ -188,5 +195,28 @@ public class Enemy : MonoBehaviour {
         Destroy(destNode);
 
         return pathVectors;
+    }
+
+    bool ConeOfVision(Vector2 direction, float widthAngle, float distance, GameObject target, LayerMask mask, int amount = 10) {
+        bool ret = false;
+        float dirAngle = Vector2.Angle(direction, new Vector2(1, 0));
+        if (direction.y < 0) {
+            dirAngle = 360 - dirAngle;
+        }
+        Debug.Log(dirAngle);
+
+        for (float angle = dirAngle - widthAngle/2; angle <= dirAngle + widthAngle/2; angle += widthAngle/amount) {
+            float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
+            float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
+            Vector2 rayVector = new Vector2(cos, sin);
+            //Debug.Log(rayVector);
+            RaycastHit2D ray = Physics2D.Raycast(transform.position, rayVector, distance, mask);
+            if (ray.collider != null) {
+                Debug.DrawLine(transform.position, ray.point, Color.red);
+            } else {
+                Debug.DrawLine(transform.position, (Vector2)transform.position + rayVector * distance, Color.red);
+            }
+        }
+        return ret;
     }
 }

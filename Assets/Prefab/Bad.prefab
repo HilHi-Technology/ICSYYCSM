@@ -85,10 +85,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dest: {fileID: 0}
   patrolNodes: []
+  target: {x: 0, y: 0}
   speed: 5
   pathMask:
     serializedVersion: 2
     m_Bits: 1024
+  player: {fileID: 100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
 --- !u!212 &21200272
 SpriteRenderer:
   m_ObjectHideFlags: 1
