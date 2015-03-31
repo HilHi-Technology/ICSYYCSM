@@ -16,10 +16,10 @@ public class Enemy : MonoBehaviour {
     public float speed; //Speed of enemy
     private float patrolWait; //Wait time between 
     private bool isWaiting;
-    private NodeScript[] allNodes;
+    static public NodeScript[] allNodes;
     public LayerMask pathMask;
     // Use this for initialization
-    void Start() {
+    void Awake() {
         isWaiting = false; //Reset the waiting state
 
         allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
@@ -109,23 +109,10 @@ public class Enemy : MonoBehaviour {
         GameObject destNode = new GameObject(); 
         destNode.transform.position = destination;
         NodeScript destScript = destNode.AddComponent<NodeScript>();
-        bool foundGoal = false; //To check whether there is a path to the destination.
+        destScript.mask = mask;
+        destScript.FindOtherNodes();
 
-        foreach (NodeScript nodeScr in roomNodes) {
-            //Go through all the premade room nodes to see if there is a path to the goal
-            GameObject node = nodeScr.gameObject;
-            float distance = (destination - (Vector2)node.transform.position).magnitude;
-            //Debug.Log(distance);
-            RaycastHit2D ray = Physics2D.CircleCast(destination, 0.5f, (Vector2)node.transform.position - destination, distance, mask);
-
-            if (ray.collider == null) { //If ray reached the node without hitting a wall
-                foundGoal = true;
-                //Connect the nodes
-                nodeScr.neighbors.Add(destNode);
-                destScript.neighbors.Add(node);
-            }
-        }
-        if (!foundGoal) {
+        if (destScript.neighbors.Count == 0) {
             //If there isn't a path to the goal, cleanup and return an empty path.
             Destroy(destNode);
             pathVectors.Clear();
@@ -136,18 +123,8 @@ public class Enemy : MonoBehaviour {
         GameObject startNode = new GameObject();
         startNode.transform.position = transform.position;
         NodeScript startScript = startNode.AddComponent<NodeScript>();
-
-        foreach (NodeScript nodeScr in roomNodes) {
-            //Connect the start node with any possible room nodes.
-            GameObject node = nodeScr.gameObject;
-            float distance = (node.transform.position - transform.position).magnitude;
-            RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.5f, node.transform.position - transform.position, distance, mask);
-            if (ray.collider == null) { //If ray reached the node without hitting a wall
-                //Connect the nodes
-                nodeScr.neighbors.Add(startNode);
-                startScript.neighbors.Add(node);
-            }
-        }
+        startScript.mask = mask;
+        startScript.FindOtherNodes();
 
 
         //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
@@ -168,7 +145,6 @@ public class Enemy : MonoBehaviour {
             List<GameObject> neighbors = current.GetComponent<NodeScript>().neighbors; //Get the node's neighbors, to be expanded upon
 
             if (current == destNode) { //If the frontier that is about to be expanded is the goal then we've reached the goal. At that point we can construct a path to the goal using cameFrom.
-                
                 break; //Found our destination
 
             }
