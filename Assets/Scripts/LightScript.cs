@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class LightScript : MonoBehaviour {
     private Vector2 previousPoint; //Store the last vertex in order to draw light
-    private List<Vector2> vList = new List<Vector2>(); //Contains all the vertex in the game, and will sort those vertex
+    private List<Vector2> vList = new List<Vector2>(); //Contains all the vertices in the game, and will sort those vertex
     private Vector2 mouse_pos; 
     public LayerMask rayMask; //Used to only cast light rays on certain layers of objects
     public GameObject DrawObj; //Objects that are used to draw the lights. One will be created for each triangle of light drawn
@@ -111,42 +111,8 @@ public class LightScript : MonoBehaviour {
                     Debug.DrawLine(pStart, previousRay2.point, Color.yellow);
                     Debug.DrawLine(start, ray2.point, Color.yellow);
                 }
-
-                //Create draw objects for each light triangles being drawn in order to draw them.
-                GameObject shadow_obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject; 
-                DrawList.Add(shadow_obj); //Add draw objects to the this list to be removed eventually
-                MeshDraw shadow_scr = shadow_obj.GetComponent<MeshDraw>();
-                shadow_scr.vertices = new Vector3[4];
-                shadow_scr.vertices[0] = (Vector3)shadow_prev_point;
-                shadow_scr.vertices[1] = (Vector3)shadow_prev_point_extend;
-                shadow_scr.vertices[2] = (Vector3)shadow_cur_point;
-                shadow_scr.vertices[3] = (Vector3)shadow_cur_point_extend;
-
-                //Set the color of the vision
-                shadow_scr.colors = new Color[4];
-                shadow_scr.colors[0] = new Color(0, 0, 0, 1f); //Previous point
-                shadow_scr.colors[1] = new Color(0, 0, 0, 1f); //This vertex is the player's position
-                shadow_scr.colors[2] = new Color(0, 0, 0, 1f); //Current point
-                shadow_scr.colors[3] = new Color(0, 0, 0, 1f); //Current point
-                shadow_scr.is_light = false;
-                Debug.DrawLine(transform.position, ray.point, Color.white);
-
-                GameObject light_obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject;
-                DrawList.Add(light_obj); //Add draw objects to the this list to be removed eventually
-                MeshDraw light_scr = light_obj.GetComponent<MeshDraw>();
-
-                light_scr.vertices = new Vector3[3];
-                light_scr.vertices[0] = light_prev_point;
-                light_scr.vertices[1] = player_pos;
-                light_scr.vertices[2] = light_cur_point;
-                //light_scr.vertices[3] = new Vector3(9999,9999,9999); //Generic number that pretty much represents null
-
-                light_scr.colors = new Color[3];
-                light_scr.colors[0] = new Color(1, 1, 1, 0.5f);
-                light_scr.colors[1] = new Color(1, 1, 1, 0.5f); //White
-                light_scr.colors[2] = new Color(1, 1, 1, 0.5f);
-                light_scr.is_light = true;
-                //}
+                DrawRectangle(shadow_prev_point, shadow_prev_point_extend, shadow_cur_point, shadow_cur_point_extend, Color.black);
+                DrawTriangle(light_prev_point, player_pos, light_cur_point, new Color(1, 1, 1, 0.5f));
                 
             }
             previousPoint = v;
@@ -155,8 +121,43 @@ public class LightScript : MonoBehaviour {
         }
         vList.Clear();
     }
-    //void OnDrawGizmos(){
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawSphere(transform.position, 5);
-    //}
+
+    void DrawRectangle(Vector3 botLeft, Vector3 topLeft, Vector3 botRight, Vector3 topRight, Color color) {
+        //Create draw objects for each light triangles being drawn in order to draw them.
+        //These objects and their meshes must be deleted at the beginning of the next loop, otherwise memory leaks and funky things happen.
+        GameObject shadow_obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject;
+        DrawList.Add(shadow_obj); //Add draw objects to the this list to be removed eventually
+        MeshDraw shadow_scr = shadow_obj.GetComponent<MeshDraw>();
+        shadow_scr.vertices = new Vector3[4];
+        shadow_scr.vertices[0] = (Vector3)botLeft;
+        shadow_scr.vertices[1] = (Vector3)topLeft;
+        shadow_scr.vertices[2] = (Vector3)botRight;
+        shadow_scr.vertices[3] = (Vector3)topRight;
+
+        //Set the color of the vision
+        shadow_scr.colors = new Color[4];
+        shadow_scr.colors[0] = color; //Previous point
+        shadow_scr.colors[1] = color; //This vertex is the player's position
+        shadow_scr.colors[2] = color; //Current point
+        shadow_scr.colors[3] = color; //Current point
+        shadow_scr.isTriangle = false;
+        //Debug.DrawLine(transform.position, ray.point, Color.white);
+    }
+    void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3, Color color) {
+        //These objects and their meshes must be deleted at the beginning of the next loop, otherwise memory leaks and funky things happen.
+        GameObject light_obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject;
+        DrawList.Add(light_obj); //Add draw objects to the this list to be removed eventually
+        MeshDraw light_scr = light_obj.GetComponent<MeshDraw>();
+
+        light_scr.vertices = new Vector3[3];
+        light_scr.vertices[0] = point1;
+        light_scr.vertices[1] = point2;
+        light_scr.vertices[2] = point3;
+
+        light_scr.colors = new Color[3];
+        light_scr.colors[0] = color;
+        light_scr.colors[1] = color; //White
+        light_scr.colors[2] = color;
+        light_scr.isTriangle = true;
+    }
 }

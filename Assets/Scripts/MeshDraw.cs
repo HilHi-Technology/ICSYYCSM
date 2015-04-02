@@ -8,7 +8,7 @@ public class MeshDraw : MonoBehaviour {
     public Vector3[] vertices;
     public Color[] colors;
     private int i = 1;
-    public bool is_light;
+    public bool isTriangle;
 	void Start () {
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.Clear();
@@ -16,7 +16,7 @@ public class MeshDraw : MonoBehaviour {
         mesh.colors = colors;
         //is_light = false;
         
-        if (is_light) {
+        if (isTriangle) {
             mesh.triangles = new int[] { 0, 1, 2 };
             //Debug.Log(mesh.vertices.Length);
         } else { 
