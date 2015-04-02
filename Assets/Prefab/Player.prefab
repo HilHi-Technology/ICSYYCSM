@@ -283,6 +283,9 @@ MonoBehaviour:
   DrawList: []
   shadow_length: 100
   shadow_offset: 0
+  eyelids: {fileID: 441280, guid: 8402f845a1175684aa532b1b8fb07893, type: 2}
+  eyesCloseTime: 1
+  eyesOpenTime: 1
 --- !u!114 &11488020
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour {
     static public NodeScript[] allNodes;
     public LayerMask pathMask;
     public GameObject player;
+    private SpriteRenderer renderer;
+
     // Use this for initialization
     void Awake() {
         isWaiting = false; //Reset the waiting state
@@ -29,11 +31,16 @@ public class Enemy : MonoBehaviour {
         //Debug.Log(Vector2.Angle(new Vector2(0, 0), new Vector2(0, 2)));
     }
 
+    void Start() {
+        renderer = GetComponent<SpriteRenderer>();
+
+    }
     // Update is called once per frame
     void Update() {
+        //Debug.Log(renderer.isVisible);
         patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
         target = patrolNodes[current_dest];
-        ConeOfVision(target - (Vector2)transform.position, 45, 4, player, pathMask);
+        //ConeOfVision(target - (Vector2)transform.position, 45, 4, player, pathMask);
         if (isWaiting) {
             patrolWait += Time.deltaTime; //Increment the timer
             if (patrolWait >= 0f) {
@@ -53,6 +60,8 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
+
+        
     }
 
     bool move_to(Vector2 destination, float speed) {
@@ -197,26 +206,27 @@ public class Enemy : MonoBehaviour {
         return pathVectors;
     }
 
-    bool ConeOfVision(Vector2 direction, float widthAngle, float distance, GameObject target, LayerMask mask, int amount = 10) {
-        bool ret = false;
-        float dirAngle = Vector2.Angle(direction, new Vector2(1, 0));
-        if (direction.y < 0) {
-            dirAngle = 360 - dirAngle;
-        }
-        Debug.Log(dirAngle);
+    //bool ConeOfVision(Vector2 direction, float widthAngle, float distance, GameObject target, LayerMask mask, int amount = 10) {
 
-        for (float angle = dirAngle - widthAngle/2; angle <= dirAngle + widthAngle/2; angle += widthAngle/amount) {
-            float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
-            float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
-            Vector2 rayVector = new Vector2(cos, sin);
-            //Debug.Log(rayVector);
-            RaycastHit2D ray = Physics2D.Raycast(transform.position, rayVector, distance, mask);
-            if (ray.collider != null) {
-                Debug.DrawLine(transform.position, ray.point, Color.red);
-            } else {
-                Debug.DrawLine(transform.position, (Vector2)transform.position + rayVector * distance, Color.red);
-            }
-        }
-        return ret;
-    }
+    //    bool ret = false;
+    //    float dirAngle = Vector2.Angle(direction, new Vector2(1, 0));
+    //    if (direction.y < 0) {
+    //        dirAngle = 360 - dirAngle;
+    //    }
+    //    //Debug.Log(dirAngle);
+
+    //    for (float angle = dirAngle - widthAngle/2; angle <= dirAngle + widthAngle/2; angle += widthAngle/amount) {
+    //        float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
+    //        float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
+    //        Vector2 rayVector = new Vector2(cos, sin);
+    //        //Debug.Log(rayVector);
+    //        RaycastHit2D ray = Physics2D.Raycast(transform.position, rayVector, distance, mask);
+    //        if (ray.collider != null) {
+    //            Debug.DrawLine(transform.position, ray.point, Color.red);
+    //        } else {
+    //            Debug.DrawLine(transform.position, (Vector2)transform.position + rayVector * distance, Color.red);
+    //        }
+    //    }
+    //    return ret;
+    //}
 }

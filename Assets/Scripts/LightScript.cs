@@ -11,13 +11,44 @@ public class LightScript : MonoBehaviour {
     public List<GameObject> DrawList = new List<GameObject>(); //The list that contains all the mesh objects to destroy them after every loop
     public int shadow_length;
     public float shadow_offset;
+
+    public Transform eyelids;
+    private SpriteRenderer eyelidsRenderer;
+    private bool eyesClosed;
+    public float eyesCloseTime;
+    public float eyesOpenTime;
+    private Color newEyelidsColor;
     // Use this for initialization
     void Start() {
+        eyelidsRenderer = eyelids.GetComponent<SpriteRenderer>();
+        eyelidsRenderer.color = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
+        eyesClosed = false;
 
+        newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
     }
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetButtonDown("Blink") && eyesClosed) {
+            Debug.Log("open");
+            newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
+            eyesClosed = false;
+        }
+        else if (Input.GetButtonDown("Blink") && !eyesClosed) {
+            Debug.Log("close");
+            newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
+            eyesClosed = true;
+        }
+
+        if (!eyesClosed) {
+            eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesOpenTime * Time.deltaTime);
+        }
+        if (eyesClosed) {
+            eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesCloseTime * Time.deltaTime);
+        }
+        
+        
+        
         previousPoint = transform.position; //Initialize previous point, but it won't be used until it receives another 
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
@@ -27,6 +58,7 @@ public class LightScript : MonoBehaviour {
         }
         DrawList.Clear();
         mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Get the mouse position in world coordinates
+
 
         //Find all vertices and add it to a list
         PolygonCollider2D[] allMeshes = FindObjectsOfType(typeof(PolygonCollider2D)) as PolygonCollider2D[]; 
