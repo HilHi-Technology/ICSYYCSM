@@ -22,6 +22,12 @@ public class LightScript : MonoBehaviour {
     public float eyesClosedRadius;
     public float eyesOpenRadius;
     public float eyesClosedShadowRadius;
+
+    private float blurriness = 0;
+    public float blurrinessTime;
+    private float maxBlurriness = 10;
+    private UnityStandardAssets.ImageEffects.BlurOptimized BlurScript;
+
     // Use this for initialization
     void Start() {
         eyelidsRenderer = eyelids.GetComponent<SpriteRenderer>();
@@ -29,6 +35,8 @@ public class LightScript : MonoBehaviour {
         eyesClosed = false;
 
         newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
+
+        BlurScript = Camera.main.GetComponent<UnityStandardAssets.ImageEffects.BlurOptimized>();
     }
 
     // Update is called once per frame
@@ -37,6 +45,8 @@ public class LightScript : MonoBehaviour {
             Debug.Log("open");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
             eyesClosed = false;
+            blurriness = maxBlurriness;
+            BlurScript.enabled = true;
         }
         else if (Input.GetButtonDown("Blink") && !eyesClosed) {
             Debug.Log("close");
@@ -48,15 +58,16 @@ public class LightScript : MonoBehaviour {
         }
         else{
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
+            blurriness = Mathf.Lerp(blurriness, -1, blurrinessTime * Time.deltaTime);
         }
 
-        //if (!eyesClosed) {
-        //    eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesOpenTime * Time.deltaTime);
-        //}
-        //if (eyesClosed) {
-        //    eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesCloseTime * Time.deltaTime);
-        //}
-        
+        if (blurriness > 0) {
+            BlurScript.downsample = (int)(blurriness / maxBlurriness * 3);
+            BlurScript.blurSize = blurriness / maxBlurriness * 10;
+            BlurScript.blurIterations = (int)(blurriness / maxBlurriness * 3 + 1);
+        } else {
+            BlurScript.enabled = false;
+        }
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
             Mesh sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;

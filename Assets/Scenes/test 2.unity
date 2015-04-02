@@ -1433,6 +1433,26 @@ Prefab:
       propertyPath: youWon
       value: 
       objectReference: {fileID: 200863084}
+    - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: downsample
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: blurSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: blurIterations
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11484182, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: blurrinessTime
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
   m_IsPrefabParent: 0
