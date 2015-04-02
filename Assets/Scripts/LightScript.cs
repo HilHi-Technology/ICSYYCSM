@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class LightScript : MonoBehaviour {
     private Vector2 previousPoint; //Store the last vertex in order to draw light
     private List<Vector2> vList = new List<Vector2>(); //Contains all the vertices in the game, and will sort those vertex
-    private Vector2 mouse_pos; 
     public LayerMask rayMask; //Used to only cast light rays on certain layers of objects
     public GameObject DrawObj; //Objects that are used to draw the lights. One will be created for each triangle of light drawn
     public List<GameObject> DrawList = new List<GameObject>(); //The list that contains all the mesh objects to destroy them after every loop
@@ -18,6 +17,9 @@ public class LightScript : MonoBehaviour {
     public float eyesCloseTime;
     public float eyesOpenTime;
     private Color newEyelidsColor;
+
+    public float eyeClosedVisionRadius;
+    public float eyeClosedShadowRadius;
     // Use this for initialization
     void Start() {
         eyelidsRenderer = eyelids.GetComponent<SpriteRenderer>();
@@ -31,25 +33,22 @@ public class LightScript : MonoBehaviour {
     void Update() {
         if (Input.GetButtonDown("Blink") && eyesClosed) {
             Debug.Log("open");
-            newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
+            //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
             eyesClosed = false;
         }
         else if (Input.GetButtonDown("Blink") && !eyesClosed) {
             Debug.Log("close");
-            newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
+            //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
             eyesClosed = true;
         }
 
-        if (!eyesClosed) {
-            eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesOpenTime * Time.deltaTime);
-        }
-        if (eyesClosed) {
-            eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesCloseTime * Time.deltaTime);
-        }
+        //if (!eyesClosed) {
+        //    eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesOpenTime * Time.deltaTime);
+        //}
+        //if (eyesClosed) {
+        //    eyelidsRenderer.color = Color.Lerp(eyelidsRenderer.color, newEyelidsColor, eyesCloseTime * Time.deltaTime);
+        //}
         
-        
-        
-        previousPoint = transform.position; //Initialize previous point, but it won't be used until it receives another 
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
             Mesh sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
@@ -57,69 +56,100 @@ public class LightScript : MonoBehaviour {
             Destroy(obj);
         }
         DrawList.Clear();
-        mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Get the mouse position in world coordinates
 
 
-        //Find all vertices and add it to a list
-        PolygonCollider2D[] allMeshes = FindObjectsOfType(typeof(PolygonCollider2D)) as PolygonCollider2D[]; 
-        foreach (PolygonCollider2D col in allMeshes) {
-            foreach (Vector2 vLocal in col.points) {
-                Vector2 v = col.transform.TransformPoint(vLocal);
-                vList.Add(v);
-            }
-        }
+        if (!eyesClosed) {
+            previousPoint = transform.position; //Initialize previous point
 
-        //Sort the vertices according to its angle to player
-        vList.Sort((item1, item2) => (Mathf.Atan2(item1.x - transform.position.x, item1.y - transform.position.y).CompareTo(Mathf.Atan2(item2.x - transform.position.x, item2.y - transform.position.y))));
-        vList.Add(vList[0]); //Add the last vertex in the series to complete the full circle of light
-
-
-        foreach (Vector2 v in vList) { //For all vertices
-            if (previousPoint != (Vector2)transform.position) { //Skip drawing on the first vertex, because there are not enough points to draw a triangle
-                Debug.DrawLine(previousPoint, v, Color.red); //Draw debug lines connecting all the vertices
-
-                //Shoot a ray at previous vertex and current vertex. Circlecast is used to increase the ray width, so it won't miss the vertex it's shooting at.
-                RaycastHit2D previousRay = Physics2D.CircleCast(transform.position, 0.0009f, previousPoint - (Vector2)transform.position, 2000, rayMask); 
-                RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.0009f, v - (Vector2)transform.position, 2000, rayMask);
-
-                //Set vertices to be drawn
-                Vector2 shadow_prev_point = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
-                Vector2 shadow_prev_point_extend = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
-                Vector2 shadow_cur_point = ray.point + (v - (Vector2)transform.position).normalized * shadow_offset;
-                Vector2 shadow_cur_point_extend = ray.point + (v - (Vector2)transform.position).normalized * shadow_length;
-
-                Vector2 light_prev_point = previousRay.point;
-                Vector2 player_pos = transform.position;
-                Vector2 light_cur_point = ray.point;
-
-                if (previousRay.collider != ray.collider) { //If the 2 vertices are not part of the same object
-                    //Shoot another ray to extend the vertex to the next 
-                    Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f);
-                    Vector2 pStart = previousRay.point + ((previousPoint - (Vector2)transform.position).normalized * 0.05f);
-                    RaycastHit2D previousRay2 = Physics2D.Raycast(pStart, previousPoint - (Vector2)transform.position, 2000, rayMask);
-                    RaycastHit2D ray2 = Physics2D.Raycast(start, v - (Vector2)transform.position, 2000, rayMask);
-
-                    shadow_prev_point = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
-                    shadow_prev_point_extend = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
-                    shadow_cur_point = ray2.point + (v - (Vector2)transform.position).normalized * shadow_offset;
-                    shadow_cur_point_extend = ray2.point + (v - (Vector2)transform.position).normalized * shadow_length;
-
-                    light_prev_point = previousRay2.point;
-                    player_pos = transform.position;
-                    light_cur_point = ray2.point;
-
-                    Debug.DrawLine(pStart, previousRay2.point, Color.yellow);
-                    Debug.DrawLine(start, ray2.point, Color.yellow);
+            //Find all vertices and add it to a list
+            PolygonCollider2D[] allMeshes = FindObjectsOfType(typeof(PolygonCollider2D)) as PolygonCollider2D[];
+            foreach (PolygonCollider2D col in allMeshes) {
+                foreach (Vector2 vLocal in col.points) {
+                    Vector2 v = col.transform.TransformPoint(vLocal);
+                    vList.Add(v);
                 }
-                DrawRectangle(shadow_prev_point, shadow_prev_point_extend, shadow_cur_point, shadow_cur_point_extend, Color.black);
-                DrawTriangle(light_prev_point, player_pos, light_cur_point, new Color(1, 1, 1, 0.5f));
-                
             }
-            previousPoint = v;
+
+            //Sort the vertices according to its angle to player
+            vList.Sort((item1, item2) => (Mathf.Atan2(item1.x - transform.position.x, item1.y - transform.position.y).CompareTo(Mathf.Atan2(item2.x - transform.position.x, item2.y - transform.position.y))));
+            vList.Add(vList[0]); //Add the last vertex in the series to complete the full circle of light
 
 
+            foreach (Vector2 v in vList) { //For all vertices
+                if (previousPoint != (Vector2)transform.position) { //Skip drawing on the first vertex, because there are not enough points to draw a triangle
+                    Debug.DrawLine(previousPoint, v, Color.red); //Draw debug lines connecting all the vertices
+
+                    //Shoot a ray at previous vertex and current vertex. Circlecast is used to increase the ray width, so it won't miss the vertex it's shooting at.
+                    RaycastHit2D previousRay = Physics2D.CircleCast(transform.position, 0.0009f, previousPoint - (Vector2)transform.position, 2000, rayMask);
+                    RaycastHit2D ray = Physics2D.CircleCast(transform.position, 0.0009f, v - (Vector2)transform.position, 2000, rayMask);
+
+                    //Set vertices to be drawn
+                    Vector2 shadow_prev_point = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
+                    Vector2 shadow_prev_point_extend = previousRay.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
+                    Vector2 shadow_cur_point = ray.point + (v - (Vector2)transform.position).normalized * shadow_offset;
+                    Vector2 shadow_cur_point_extend = ray.point + (v - (Vector2)transform.position).normalized * shadow_length;
+
+                    Vector2 light_prev_point = previousRay.point;
+                    Vector2 player_pos = transform.position;
+                    Vector2 light_cur_point = ray.point;
+
+                    if (previousRay.collider != ray.collider) { //If the 2 vertices are not part of the same object
+                        //Shoot another ray to extend the vertex to the next 
+                        Vector2 start = ray.point + ((v - (Vector2)transform.position).normalized * 0.05f);
+                        Vector2 pStart = previousRay.point + ((previousPoint - (Vector2)transform.position).normalized * 0.05f);
+                        RaycastHit2D previousRay2 = Physics2D.Raycast(pStart, previousPoint - (Vector2)transform.position, 2000, rayMask);
+                        RaycastHit2D ray2 = Physics2D.Raycast(start, v - (Vector2)transform.position, 2000, rayMask);
+
+                        shadow_prev_point = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_offset;
+                        shadow_prev_point_extend = previousRay2.point + (previousPoint - (Vector2)transform.position).normalized * shadow_length;
+                        shadow_cur_point = ray2.point + (v - (Vector2)transform.position).normalized * shadow_offset;
+                        shadow_cur_point_extend = ray2.point + (v - (Vector2)transform.position).normalized * shadow_length;
+
+                        light_prev_point = previousRay2.point;
+                        player_pos = transform.position;
+                        light_cur_point = ray2.point;
+
+                        Debug.DrawLine(pStart, previousRay2.point, Color.yellow);
+                        Debug.DrawLine(start, ray2.point, Color.yellow);
+                    }
+                    DrawRectangle(shadow_prev_point, shadow_prev_point_extend, shadow_cur_point, shadow_cur_point_extend, Color.black);
+                    DrawTriangle(light_prev_point, player_pos, light_cur_point, new Color(1, 1, 1, 0.5f));
+
+                }
+                previousPoint = v;
+
+
+            }
+            vList.Clear();
+        } else {
+            float angleStep = 1;
+            float angle = angleStep;
+            for (; angle < 360; angle += angleStep) {
+                float prevCos = Mathf.Cos(angle - angleStep * Mathf.Deg2Rad);
+                float prevSin = Mathf.Sin(angle - angleStep * Mathf.Deg2Rad);
+                float curCos = Mathf.Cos(angle * Mathf.Deg2Rad);
+                float curSin = Mathf.Sin(angle * Mathf.Deg2Rad);
+
+                Vector2 prevPoint = new Vector2(prevCos, prevSin).normalized * eyeClosedVisionRadius + (Vector2)transform.position;
+                Vector2 prevPointExtend = prevPoint.normalized * eyeClosedShadowRadius + (Vector2)transform.position;
+                Vector2 curPoint = new Vector2(curCos, curSin).normalized * eyeClosedVisionRadius + (Vector2)transform.position;
+                Vector2 curPointExtend = curPoint.normalized * eyeClosedShadowRadius + (Vector2)transform.position;
+
+                DrawRectangle(prevPoint, prevPointExtend, curPoint, curPointExtend, Color.black);
+            }
+            //Complete the last angle draw
+            float prevCos2 = Mathf.Cos(angle - angleStep * Mathf.Deg2Rad);
+            float prevSin2 = Mathf.Sin(angle - angleStep * Mathf.Deg2Rad);
+            float curCos2 = Mathf.Cos(angle * Mathf.Deg2Rad);
+            float curSin2 = Mathf.Sin(angle * Mathf.Deg2Rad);
+
+            Vector2 prevPoint2 = new Vector2(prevCos2, prevSin2).normalized * eyeClosedVisionRadius;
+            Vector2 prevPointExtend2 = prevPoint2.normalized * eyeClosedShadowRadius;
+            Vector2 curPoint2 = new Vector2(curCos2, curSin2).normalized * eyeClosedVisionRadius;
+            Vector2 curPointExtend2 = curPoint2.normalized * eyeClosedShadowRadius;
+
+            DrawRectangle(prevPoint2, prevPointExtend2, curPoint2, curPointExtend2, Color.black);
         }
-        vList.Clear();
     }
 
     void DrawRectangle(Vector3 botLeft, Vector3 topLeft, Vector3 botRight, Vector3 topRight, Color color) {
