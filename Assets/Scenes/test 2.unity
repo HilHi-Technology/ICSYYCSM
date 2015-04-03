@@ -1435,11 +1435,11 @@ Prefab:
       objectReference: {fileID: 200863084}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: downsample
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurSize
@@ -1447,10 +1447,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurIterations
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 11484182, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurrinessTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: blurType
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
