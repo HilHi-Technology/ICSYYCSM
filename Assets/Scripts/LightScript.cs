@@ -27,6 +27,8 @@ public class LightScript : MonoBehaviour {
     public float blurrinessTime;
     private float maxBlurriness = 10;
     private UnityStandardAssets.ImageEffects.BlurOptimized BlurScript;
+    private UnityStandardAssets.ImageEffects.MotionBlur MotionBlurScript;
+
 
     // Use this for initialization
     void Start() {
@@ -37,6 +39,7 @@ public class LightScript : MonoBehaviour {
         newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
 
         BlurScript = Camera.main.GetComponent<UnityStandardAssets.ImageEffects.BlurOptimized>();
+        MotionBlurScript = Camera.main.GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
     }
 
     // Update is called once per frame
@@ -52,21 +55,29 @@ public class LightScript : MonoBehaviour {
             Debug.Log("close");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
             eyesClosed = true;
+            BlurScript.enabled = false;
+            MotionBlurScript.blurAmount = 0f;
         }
         if (eyesClosed) {
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, eyesCloseTime * Time.deltaTime);
         }
         else{
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
-            blurriness = Mathf.Lerp(blurriness, -1, blurrinessTime * Time.deltaTime);
+            blurriness = Mathf.Lerp(blurriness, -2, blurrinessTime * Time.deltaTime);
         }
 
         if (blurriness > 0) {
-            BlurScript.downsample = (int)(blurriness / maxBlurriness * 3);
+            BlurScript.downsample = 2;
+            BlurScript.blurIterations = 4;
             BlurScript.blurSize = blurriness / maxBlurriness * 10;
-            BlurScript.blurIterations = (int)(blurriness / maxBlurriness * 3 + 1);
+            MotionBlurScript.blurAmount = 0.8f;
+            if (blurriness < 2) {
+                BlurScript.downsample = (int)(blurriness * 5 / maxBlurriness * 2);
+                BlurScript.blurIterations = (int)(blurriness * 5 / maxBlurriness * 3 + 1);
+            }
         } else {
             BlurScript.enabled = false;
+            MotionBlurScript.blurAmount = 0f;
         }
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting

@@ -743,6 +743,24 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 0f6686b71a494624d821f54fae5d0461, type: 2}
   m_PrefabInternal: {fileID: 464602222}
+--- !u!1 &507392578
+GameObject:
+  m_PrefabParentObject: {fileID: 172528, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+  m_PrefabInternal: {fileID: 1190091882}
+--- !u!114 &507392579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 507392578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a2083ad114a07d000fbfb8d76c639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
+  blurAmount: .800000012
+  extraBlur: 0
 --- !u!1001 &557778088
 Prefab:
   m_ObjectHideFlags: 0
@@ -1443,7 +1461,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurSize
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurIterations
@@ -1451,11 +1469,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11484182, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurrinessTime
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 11400598, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
       propertyPath: blurType
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11484182, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+      propertyPath: eyesClosedRadius
+      value: .800000012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
