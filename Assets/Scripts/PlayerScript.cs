@@ -19,9 +19,8 @@ public class PlayerScript : MonoBehaviour {
     // Use this for initialization
 	void Start () {
         renderer = GetComponent<Renderer>();
-        Application.targetFrameRate = 1;
         youWonText = youWon.GetComponent<GUIText>();
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = -1;
 	}
 
     

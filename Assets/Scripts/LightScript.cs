@@ -22,6 +22,7 @@ public class LightScript : MonoBehaviour {
     public float eyesClosedRadius;
     public float eyesOpenRadius;
     public float eyesClosedShadowRadius;
+    private bool canCloseEyes = true;
 
     private float blurriness = 0;
     public float blurrinessTime;
@@ -50,34 +51,42 @@ public class LightScript : MonoBehaviour {
             eyesClosed = false;
             blurriness = maxBlurriness;
             BlurScript.enabled = true;
+            canCloseEyes = false;
         }
-        else if (Input.GetButtonDown("Blink") && !eyesClosed) {
+        else if (Input.GetButtonDown("Blink") && !eyesClosed && canCloseEyes) {
             Debug.Log("close");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
             eyesClosed = true;
-            BlurScript.enabled = false;
-            MotionBlurScript.blurAmount = 0f;
+            
+            //MotionBlurScript.blurAmount = 0f;
         }
         if (eyesClosed) {
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, eyesCloseTime * Time.deltaTime);
+            if (eyesClosedVisionRadius < eyesClosedRadius + 0.5f) {
+                BlurScript.enabled = false;
+            }
         }
         else{
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
+
+
             blurriness = Mathf.Lerp(blurriness, -2, blurrinessTime * Time.deltaTime);
         }
+
 
         if (blurriness > 0) {
             BlurScript.downsample = 2;
             BlurScript.blurIterations = 4;
             BlurScript.blurSize = blurriness / maxBlurriness * 10;
-            MotionBlurScript.blurAmount = 0.8f;
+            //MotionBlurScript.blurAmount = 0.8f;
             if (blurriness < 2) {
                 BlurScript.downsample = (int)(blurriness * 5 / maxBlurriness * 2);
                 BlurScript.blurIterations = (int)(blurriness * 5 / maxBlurriness * 3 + 1);
             }
         } else {
             BlurScript.enabled = false;
-            MotionBlurScript.blurAmount = 0f;
+            canCloseEyes = true;
+            //MotionBlurScript.blurAmount = 0f;
         }
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
@@ -142,7 +151,7 @@ public class LightScript : MonoBehaviour {
                     Debug.DrawLine(start, ray2.point, Color.yellow);
                 }
                 DrawRectangle(shadow_prev_point, shadow_prev_point_extend, shadow_cur_point, shadow_cur_point_extend, Color.black);
-                //DrawTriangle(light_prev_point, player_pos, light_cur_point, new Color(1, 1, 1, 0.5f));
+
 
             }
             previousPoint = v;
@@ -150,9 +159,9 @@ public class LightScript : MonoBehaviour {
 
         }
         vList.Clear();
-            
+
         //DrawRectangle(transform.position - new Vector3(-1, -1, 0), transform.position - new Vector3(-1, 1, 0), transform.position - new Vector3(1, -1, 0), transform.position - new Vector3(1, 1, 0), Color.black);
-        float angleStep = 4;
+        float angleStep = 20;
         float angle = angleStep;
         for (; angle < 360; angle += angleStep) {
             float prevCos = Mathf.Cos((angle - angleStep) * Mathf.Deg2Rad);
