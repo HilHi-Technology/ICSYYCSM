@@ -13,7 +13,7 @@ public class LightScript : MonoBehaviour {
 
     public Transform eyelids;
     private SpriteRenderer eyelidsRenderer;
-    private bool eyesClosed;
+    public bool areEyesClosed;
     public float eyesCloseTime;
     public float eyesOpenTime;
     private Color newEyelidsColor;
@@ -35,7 +35,7 @@ public class LightScript : MonoBehaviour {
     void Start() {
         eyelidsRenderer = eyelids.GetComponent<SpriteRenderer>();
         eyelidsRenderer.color = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
-        eyesClosed = false;
+        areEyesClosed = false;
 
         newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1f);
 
@@ -45,22 +45,22 @@ public class LightScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetButtonDown("Blink") && eyesClosed) {
+        if (Input.GetButtonDown("Blink") && areEyesClosed) {
             Debug.Log("open");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
-            eyesClosed = false;
+            areEyesClosed = false;
             blurriness = maxBlurriness;
             BlurScript.enabled = true;
             canCloseEyes = false;
         }
-        else if (Input.GetButtonDown("Blink") && !eyesClosed && canCloseEyes) {
+        else if (Input.GetButtonDown("Blink") && !areEyesClosed && canCloseEyes) {
             Debug.Log("close");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
-            eyesClosed = true;
+            areEyesClosed = true;
             
             //MotionBlurScript.blurAmount = 0f;
         }
-        if (eyesClosed) {
+        if (areEyesClosed) {
             eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, eyesCloseTime * Time.deltaTime);
             if (eyesClosedVisionRadius < eyesClosedRadius + 0.5f) {
                 BlurScript.enabled = false;
@@ -191,6 +191,7 @@ public class LightScript : MonoBehaviour {
     }
 
     void DrawRectangle(Vector3 botLeft, Vector3 topLeft, Vector3 botRight, Vector3 topRight, Color color) {
+        //If this function is slow maybe it's better to create a list that contains the meshes and its script instead of using getcomponent so many times because it is a slow function.
         //Create draw objects for each light triangles being drawn in order to draw them.
         //These objects and their meshes must be deleted at the beginning of the next loop, otherwise memory leaks and funky things happen.
         GameObject shadow_obj = Instantiate(DrawObj, Vector3.zero, Quaternion.identity) as GameObject;

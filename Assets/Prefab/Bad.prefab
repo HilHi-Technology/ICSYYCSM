@@ -10,9 +10,9 @@ GameObject:
   - 4: {fileID: 459346}
   - 212: {fileID: 21200272}
   - 114: {fileID: 11484486}
-  - 61: {fileID: 6131970}
   - 114: {fileID: 11452726}
   - 50: {fileID: 5097036}
+  - 60: {fileID: 6040468}
   m_Layer: 9
   m_Name: Bad
   m_TagString: Enemy
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.6639061, y: -11.3971996, z: 0}
+  m_LocalPosition: {x: 7.5, y: -10.1999998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -40,26 +40,30 @@ Rigidbody2D:
   m_GameObject: {fileID: 136302}
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_FixedAngle: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
---- !u!61 &6131970
-BoxCollider2D:
+--- !u!60 &6040468
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
   m_Enabled: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Points:
+    m_Paths:
+    - - {x: -.496864319, y: .490476608}
+      - {x: .495624542, y: .487368584}
+      - {x: .491220474, y: -.489640236}
+      - {x: -.499967575, y: -.491699219}
 --- !u!114 &11452726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -78,7 +82,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0f75ae00ff342e43bb14edf598423cd, type: 3}
   m_Name: 
@@ -86,11 +90,14 @@ MonoBehaviour:
   dest: {fileID: 0}
   patrolNodes: []
   target: {x: 0, y: 0}
-  speed: 5
+  speed: 10
   pathMask:
     serializedVersion: 2
     m_Bits: 1024
-  player: {fileID: 100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+  playerSightMask:
+    serializedVersion: 2
+    m_Bits: 1280
+  player: {fileID: 0}
 --- !u!212 &21200272
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -19,8 +19,12 @@ public class Enemy : MonoBehaviour {
     private bool isWaiting;
     static public NodeScript[] allNodes;
     public LayerMask pathMask;
+    public LayerMask playerSightMask;
     public GameObject player;
+    private LightScript lightScript;
+    private bool seenByPlayer;
     private SpriteRenderer renderer;
+    private Vector2[] vertices;
 
     // Use this for initialization
     void Awake() {
@@ -28,7 +32,9 @@ public class Enemy : MonoBehaviour {
         target = default(Vector2);
 
         allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
+        lightScript = player.GetComponent<LightScript>();
         //Debug.Log(Vector2.Angle(new Vector2(0, 0), new Vector2(0, 2)));
+        vertices = GetComponent<PolygonCollider2D>().points;
     }
 
     void Start() {
@@ -48,7 +54,7 @@ public class Enemy : MonoBehaviour {
                 isWaiting = false;
             }
         } else {
-            if (patrolNodes.Count != 0) {
+            if (patrolNodes.Count != 0 && seenByPlayer) {
                 look_at(gameObject, target);
                 if (move_to(target, speed)) { //move toward the next node and return true if it reaches the node
                     isWaiting = true; //Wait a bit before going to the next dest
@@ -60,9 +66,23 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
-
-        
+        seenByPlayer = false;
+        if (lightScript.areEyesClosed) {
+            seenByPlayer = false;
+        }
+        else {
+            foreach (Vector2 i in vertices) {
+                Vector2 vertex = transform.TransformPoint(i);
+                RaycastHit2D ray = Physics2D.Raycast(vertex, (Vector2)player.transform.position - vertex, Mathf.Infinity, playerSightMask);
+                if (ray.collider.tag == "Player") {
+                    seenByPlayer = true;
+                    break;
+                }
+            }
+        }
+        Debug.Log(seenByPlayer);
     }
+
 
     bool move_to(Vector2 destination, float speed) {
         /* Move toward a given destination
