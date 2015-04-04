@@ -23,6 +23,7 @@ public class LightScript : MonoBehaviour {
     public float eyesOpenRadius;
     public float eyesClosedShadowRadius;
     private bool canCloseEyes = true;
+    private bool clearedEyes = false;
 
     private float blurriness = 0;
     public float blurrinessTime;
@@ -73,6 +74,7 @@ public class LightScript : MonoBehaviour {
             blurriness = Mathf.Lerp(blurriness, -2, blurrinessTime * Time.deltaTime);
         }
 
+        
 
         if (blurriness > 0) {
             BlurScript.downsample = 2;
@@ -80,12 +82,18 @@ public class LightScript : MonoBehaviour {
             BlurScript.blurSize = blurriness / maxBlurriness * 10;
             //MotionBlurScript.blurAmount = 0.8f;
             if (blurriness < 2) {
+                if (clearedEyes == false) {
+                    eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, 0.5f * Time.deltaTime);
+                    clearedEyes = true;
+                }
                 BlurScript.downsample = (int)(blurriness * 5 / maxBlurriness * 2);
                 BlurScript.blurIterations = (int)(blurriness * 5 / maxBlurriness * 3 + 1);
             }
         } else {
             BlurScript.enabled = false;
             canCloseEyes = true;
+            eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, 0.5f * Time.deltaTime);
+            clearedEyes = false;
             //MotionBlurScript.blurAmount = 0f;
         }
 

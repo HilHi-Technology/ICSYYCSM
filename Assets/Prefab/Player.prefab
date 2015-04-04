@@ -82,6 +82,7 @@ GameObject:
   - 124: {fileID: 12413938}
   - 81: {fileID: 8111496}
   - 114: {fileID: 11400598}
+  - 114: {fileID: 11442402}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -117,8 +118,8 @@ Transform:
   m_Children:
   - {fileID: 423492}
   - {fileID: 446256}
-  - {fileID: 403756}
   - {fileID: 488114}
+  - {fileID: 403756}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &403756
@@ -132,7 +133,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!4 &423492
 Transform:
   m_ObjectHideFlags: 1
@@ -181,7 +182,7 @@ Transform:
   m_LocalScale: {x: 3, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!20 &2030406
 Camera:
   m_ObjectHideFlags: 1
@@ -317,16 +318,30 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172528}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fc6bde01469c7b4badee5362f191d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  downsample: 0
-  blurSize: 0
-  blurIterations: 1
+  downsample: 2
+  blurSize: 10
+  blurIterations: 4
   blurType: 0
   blurShader: {fileID: 4800000, guid: f9d5fa183cd6b45eeb1491f74863cd91, type: 3}
+--- !u!114 &11442402
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172528}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a2083ad114a07d000fbfb8d76c639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
+  blurAmount: .800000012
+  extraBlur: 0
 --- !u!114 &11484182
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -344,13 +359,15 @@ MonoBehaviour:
   DrawObj: {fileID: 167894, guid: ccc6384bcc1384d45b23dd62355d443c, type: 2}
   DrawList: []
   shadow_length: 400
-  shadow_offset: 0
+  shadow_offset: -.100000001
   eyelids: {fileID: 488114}
+  areEyesClosed: 1
   eyesCloseTime: 15
   eyesOpenTime: 3
-  eyesClosedRadius: 1
+  eyesClosedRadius: .800000012
   eyesOpenRadius: 25
   eyesClosedShadowRadius: 500
+  blurrinessTime: 1.5
 --- !u!114 &11488020
 MonoBehaviour:
   m_ObjectHideFlags: 1

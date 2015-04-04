@@ -2,38 +2,21 @@ Initialize engine version: 5.0.0f4 (5b98b70ebeb9)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
-    Renderer: Intel(R) HD Graphics 4600 (ID=0x416)
-    Vendor:   Intel
-    VRAM:     896 MB
+    Renderer: NVIDIA GeForce GTX 760 (ID=0x1187)
+    Vendor:   NVIDIA
+    VRAM:     1951 MB
 Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.062 seconds
-desktop: 1600x900 60Hz; virtual: 1600x900 at 0,0
+Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.037 seconds
+desktop: 1920x1080 144Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\System.Core.dll (this message is harmless)
-Collision: collider#triggered
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebug.gen.cpp Line: 56)
-
-Collision: collider#triggered
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebug.gen.cpp Line: 56)
-
-Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\System.dll (this message is harmless)
-Here
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebug.gen.cpp Line: 56)
-
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.069558 ms
-
-Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 343.
-Total: 0.202707 ms (FindLiveObjects: 0.026514 ms CreateObjectMapping: 0.010263 ms MarkObjects: 0.160797 ms  DeleteObjects: 0.004704 ms)
-
+Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\System.Core.dll (this message is harmless)
