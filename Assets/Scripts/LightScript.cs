@@ -27,6 +27,8 @@ public class LightScript : MonoBehaviour {
 
     private float blurriness = 0;
     public float blurrinessTime;
+    public float blinkTime;
+    bool blinked = false;
     private float maxBlurriness = 10;
     private UnityStandardAssets.ImageEffects.BlurOptimized BlurScript;
     private UnityStandardAssets.ImageEffects.MotionBlur MotionBlurScript;
@@ -47,7 +49,7 @@ public class LightScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetButtonDown("Blink") && areEyesClosed) {
-            Debug.Log("open");
+            //Debug.Log("open");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
             areEyesClosed = false;
             blurriness = maxBlurriness;
@@ -55,7 +57,8 @@ public class LightScript : MonoBehaviour {
             canCloseEyes = false;
         }
         else if (Input.GetButtonDown("Blink") && !areEyesClosed && canCloseEyes) {
-            Debug.Log("close");
+            blinked = false;
+            //Debug.Log("close");
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 1);
             areEyesClosed = true;
             
@@ -68,34 +71,48 @@ public class LightScript : MonoBehaviour {
             }
         }
         else{
-            eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
+            
+            if (blurriness > 0) {
+                
+                BlurScript.downsample = 2;
+                BlurScript.blurIterations = 4;
+                BlurScript.blurSize = blurriness / maxBlurriness * 10;
+                //MotionBlurScript.blurAmount = 0.8f;
+                if (blurriness < 2) {
+                    //if (clearedEyes == false) {
+                    //    eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, 0.5f * Time.deltaTime);
+                    //    clearedEyes = true;
+                    //}
 
+                    BlurScript.downsample = (int)(blurriness * 5 / maxBlurriness * 2);
+                    BlurScript.blurIterations = (int)(blurriness * 5 / maxBlurriness * 3 + 1);
+                }
+            } else {
+                BlurScript.enabled = false;
+                canCloseEyes = true;
+                //eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, 0.5f * Time.deltaTime);
+                //clearedEyes = false;
+                //MotionBlurScript.blurAmount = 0f;
+            }
+            if (blurriness >= 2) {
+                eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
+            } else {
+                
+                if (eyesClosedVisionRadius > eyesClosedRadius + 1 && !blinked) {
+                    eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, blinkTime * Time.deltaTime);
+                } else {
+                    eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, blinkTime * Time.deltaTime);
+                    blinked = true;
+                }
+                //Debug.Log(blinked);
+            }
 
             blurriness = Mathf.Lerp(blurriness, -2, blurrinessTime * Time.deltaTime);
         }
 
         
 
-        if (blurriness > 0) {
-            BlurScript.downsample = 2;
-            BlurScript.blurIterations = 4;
-            BlurScript.blurSize = blurriness / maxBlurriness * 10;
-            //MotionBlurScript.blurAmount = 0.8f;
-            if (blurriness < 2) {
-                if (clearedEyes == false) {
-                    eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesClosedRadius, 0.5f * Time.deltaTime);
-                    clearedEyes = true;
-                }
-                BlurScript.downsample = (int)(blurriness * 5 / maxBlurriness * 2);
-                BlurScript.blurIterations = (int)(blurriness * 5 / maxBlurriness * 3 + 1);
-            }
-        } else {
-            BlurScript.enabled = false;
-            canCloseEyes = true;
-            eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, 0.5f * Time.deltaTime);
-            clearedEyes = false;
-            //MotionBlurScript.blurAmount = 0f;
-        }
+
 
         foreach (GameObject obj in DrawList) { //Destroy all objects used to draw lighting
             Mesh sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
