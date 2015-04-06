@@ -362,11 +362,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 0f6686b71a494624d821f54fae5d0461, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 21.1800003
+      value: 21.2999992
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0f6686b71a494624d821f54fae5d0461, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -7.13000011
+      value: -7.15999985
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0f6686b71a494624d821f54fae5d0461, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2267,6 +2267,7 @@ MonoBehaviour:
   eyesOpenRadius: 25
   eyesClosedShadowRadius: 500
   blurrinessTime: 1.5
+  blinkTime: 20
 --- !u!50 &1862602106
 Rigidbody2D:
   m_ObjectHideFlags: 0
