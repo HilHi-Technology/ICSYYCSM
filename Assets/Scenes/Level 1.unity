@@ -334,9 +334,9 @@ GUIText:
   m_GameObject: {fileID: 200863082}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: 'If I can''t see you,
+  m_Text: 'If I can''t see them,
 
-    you can''t move!'
+    they can''t move!'
   m_Anchor: 4
   m_Alignment: 0
   m_PixelOffset: {x: 0, y: 0}
@@ -2335,7 +2335,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 459346, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11484486, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: player

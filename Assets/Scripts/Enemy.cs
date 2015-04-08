@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
-        look_at(gameObject, player.transform.position);
+        //look_at(gameObject, player.transform.position);
         //Debug.Log(renderer.isVisible);
         patrolNodes = AStar(player.transform.position, allNodes, pathMask);
         
@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour {
             if (patrolNodes.Count != 0 && seenByPlayer) {
                 target = patrolNodes[current_dest];
                 body2D.isKinematic = false;
-                look_at(gameObject, target);
+                //look_at(gameObject, target);
                 if (move_to(target, speed)) { //move toward the next node and return true if it reaches the node
                     isWaiting = true; //Wait a bit before going to the next dest
                     current_dest++; //Set the next destination
