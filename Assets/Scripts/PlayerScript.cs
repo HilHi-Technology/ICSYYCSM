@@ -15,6 +15,7 @@ public class PlayerScript : MonoBehaviour {
     private GUIText youWonText;
     public float speed; //How fast the player moves
     private Renderer renderer;
+    static public bool playerDiedThisLevel = false;
 
     // Use this for initialization
 	void Start () {

@@ -26,7 +26,7 @@ public class StartButton : MonoBehaviour {
 		);
 
 		if (GUI.Button (buttonRect, "Start")) {
-			Application.LoadLevel ("test 2");
+			Application.LoadLevel (1);
 		}
 
 

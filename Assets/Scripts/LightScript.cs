@@ -26,6 +26,7 @@ public class LightScript : MonoBehaviour {
     private bool clearedEyes = false;
 
     private float blurriness = 0;
+    public int visionRayAmount;
     public float blurrinessTime;
     public float blinkTime;
     bool blinked = false;
@@ -186,7 +187,7 @@ public class LightScript : MonoBehaviour {
         vList.Clear();
 
         //DrawRectangle(transform.position - new Vector3(-1, -1, 0), transform.position - new Vector3(-1, 1, 0), transform.position - new Vector3(1, -1, 0), transform.position - new Vector3(1, 1, 0), Color.black);
-        float angleStep = 20;
+        float angleStep = 360/(float)visionRayAmount;
         float angle = angleStep;
         for (; angle < 360; angle += angleStep) {
             float prevCos = Mathf.Cos((angle - angleStep) * Mathf.Deg2Rad);

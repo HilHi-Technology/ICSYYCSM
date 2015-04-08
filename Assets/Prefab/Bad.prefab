@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: -10.1999998, z: 0}
+  m_LocalPosition: {x: -10.8500004, y: 10.46, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -70,12 +70,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebb91f2fdef613948bee4f01ad0c2ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  YouLose: {fileID: 0}
+  YouLose: {fileID: 417238, guid: 347bf675d00773149952794306b04b8a, type: 2}
 --- !u!114 &11484486
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,17 +87,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f75ae00ff342e43bb14edf598423cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dest: {fileID: 0}
   patrolNodes: []
   target: {x: 0, y: 0}
-  speed: 10
+  speed: 15
   pathMask:
     serializedVersion: 2
     m_Bits: 3072
   playerSightMask:
     serializedVersion: 2
     m_Bits: 1280
-  player: {fileID: 0}
+  player: {fileID: 100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
 --- !u!212 &21200272
 SpriteRenderer:
   m_ObjectHideFlags: 1

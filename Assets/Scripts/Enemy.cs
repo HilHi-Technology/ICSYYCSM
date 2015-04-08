@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
     //private GameObject start;
-    public GameObject dest; //destination
+    //public GameObject dest; //destination
     //private PriorityQueue<GameObject> frontier = new PriorityQueue<GameObject>(); //Queue used for pathfinding
 
 
@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour {
     void Update() {
         look_at(gameObject, player.transform.position);
         //Debug.Log(renderer.isVisible);
-        patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
+        patrolNodes = AStar(player.transform.position, allNodes, pathMask);
         
         //ConeOfVision(target - (Vector2)transform.position, 45, 4, player, pathMask);
         if (isWaiting) {
@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
-        Debug.Log(seenByPlayer);
+        //Debug.Log(seenByPlayer);
     }
 
 
