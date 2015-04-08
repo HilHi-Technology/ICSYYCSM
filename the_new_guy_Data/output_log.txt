@@ -2,21 +2,49 @@ Initialize engine version: 5.0.0f4 (5b98b70ebeb9)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
-    Renderer: NVIDIA GeForce GTX 760 (ID=0x1187)
-    Vendor:   NVIDIA
-    VRAM:     1951 MB
+    Renderer: Intel(R) HD Graphics 4600 (ID=0x416)
+    Vendor:   Intel
+    VRAM:     896 MB
 Begin MonoManager ReloadAssembly
-Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
-Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
-Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.037 seconds
-desktop: 1920x1080 144Hz; virtual: 3840x1080 at 0,0
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.082 seconds
+desktop: 1600x900 60Hz; virtual: 1600x900 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-Platform assembly: D:\Jonathan-HDD\Documents\GitHub\OGPC-2015\the_new_guy_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\System.Core.dll (this message is harmless)
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 13f8 -> priority: 1 
+  Thread -> id: 17a8 -> priority: 1 
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.696218 ms
+
+Unloading 8 unused Assets to reduce memory usage. Loaded Objects now: 417.
+Total: 0.393440 ms (FindLiveObjects: 0.037205 ms CreateObjectMapping: 0.038916 ms MarkObjects: 0.270276 ms  DeleteObjects: 0.046614 ms)
+
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\the_new_guy_Data\Managed\System.dll (this message is harmless)
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.732996 ms
+
+Unloading 127 unused Assets to reduce memory usage. Loaded Objects now: 386.
+Total: 0.285672 ms (FindLiveObjects: 0.028652 ms CreateObjectMapping: 0.020099 ms MarkObjects: 0.135993 ms  DeleteObjects: 0.100498 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.606839 ms
+
+Unloading 107 unused Assets to reduce memory usage. Loaded Objects now: 386.
+Total: 0.322450 ms (FindLiveObjects: 0.050463 ms CreateObjectMapping: 0.035067 ms MarkObjects: 0.149250 ms  DeleteObjects: 0.086813 ms)
+
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.573054 ms
+
+Unloading 127 unused Assets to reduce memory usage. Loaded Objects now: 210.
+Total: 0.257446 ms (FindLiveObjects: 0.012401 ms CreateObjectMapping: 0.017533 ms MarkObjects: 0.104774 ms  DeleteObjects: 0.122736 ms)
+
