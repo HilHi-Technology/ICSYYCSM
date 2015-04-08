@@ -42,7 +42,7 @@ MonoBehaviour:
   neighbors: []
   mask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 3072
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

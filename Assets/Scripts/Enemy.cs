@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour {
     private bool seenByPlayer;
     private SpriteRenderer renderer;
     private Vector2[] vertices;
+    private Rigidbody2D body2D;
+    
 
     // Use this for initialization
     void Awake() {
@@ -35,6 +37,7 @@ public class Enemy : MonoBehaviour {
         lightScript = player.GetComponent<LightScript>();
         //Debug.Log(Vector2.Angle(new Vector2(0, 0), new Vector2(0, 2)));
         vertices = GetComponent<PolygonCollider2D>().points;
+        body2D = GetComponent<Rigidbody2D>();
     }
 
     void Start() {
@@ -43,9 +46,10 @@ public class Enemy : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        look_at(gameObject, player.transform.position);
         //Debug.Log(renderer.isVisible);
         patrolNodes = AStar(dest.transform.position, allNodes, pathMask);
-        target = patrolNodes[current_dest];
+        
         //ConeOfVision(target - (Vector2)transform.position, 45, 4, player, pathMask);
         if (isWaiting) {
             patrolWait += Time.deltaTime; //Increment the timer
@@ -55,6 +59,8 @@ public class Enemy : MonoBehaviour {
             }
         } else {
             if (patrolNodes.Count != 0 && seenByPlayer) {
+                target = patrolNodes[current_dest];
+                body2D.isKinematic = false;
                 look_at(gameObject, target);
                 if (move_to(target, speed)) { //move toward the next node and return true if it reaches the node
                     isWaiting = true; //Wait a bit before going to the next dest
@@ -64,6 +70,8 @@ public class Enemy : MonoBehaviour {
                         patrolNodes.Reverse(); //Reverse the destination
                     }
                 }
+            } else {
+                body2D.isKinematic = true;
             }
         }
         seenByPlayer = false;
@@ -150,7 +158,7 @@ public class Enemy : MonoBehaviour {
 
         if (destScript.neighbors.Count == 0) {
             //If there isn't a path to the goal, cleanup and return an empty path.
-            Destroy(destNode);
+            destScript.DestroyNode();
             pathVectors.Clear();
             return pathVectors;
         }
@@ -162,7 +170,13 @@ public class Enemy : MonoBehaviour {
         startScript.mask = mask;
         startScript.FindOtherNodes();
 
-
+        if (startScript.neighbors.Count == 0) {
+            //If there isn't a path to the goal, cleanup and return an empty path.
+            destScript.DestroyNode();
+            startScript.DestroyNode();
+            pathVectors.Clear();
+            return pathVectors;
+        }
         //The pathfinding algorithm used is A*. The resource used is http://www.redblobgames.com/pathfinding/a-star/introduction.html
 
         //cameFrom is a dictionary. The key stores the current node, and the value stores the previous node used to reach the current node. 
@@ -211,15 +225,17 @@ public class Enemy : MonoBehaviour {
             //Derive path vectors from the nodes.
             pathVectors.Add(node.transform.position);
         }
-        foreach (NodeScript node in allNodes) {
-            //Disconnect destination node and start node from the rest.
-            if (node.neighbors.Contains(destNode)) {
-                node.neighbors.Remove(destNode);
-            }
-            if (node.neighbors.Contains(startNode)) {
-                node.neighbors.Remove(startNode);
-            }
-        }
+        //foreach (NodeScript node in allNodes) {
+        //    //Disconnect destination node and start node from the rest.
+        //    if (node.neighbors.Contains(destNode)) {
+        //        node.neighbors.Remove(destNode);
+        //    }
+        //    if (node.neighbors.Contains(startNode)) {
+        //        node.neighbors.Remove(startNode);
+        //    }
+        //}
+        destScript.DestroyNode();
+        startScript.DestroyNode();
         Destroy(startNode);
         Destroy(destNode);
 

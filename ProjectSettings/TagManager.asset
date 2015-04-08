@@ -7,6 +7,7 @@ TagManager:
   - Node
   - Enemy
   - Wall
+  - Window
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Player
   - Enemy
   - Wall
-  - 
+  - Window
   - 
   - 
   - 

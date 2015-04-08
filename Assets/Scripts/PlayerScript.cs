@@ -21,6 +21,7 @@ public class PlayerScript : MonoBehaviour {
         renderer = GetComponent<Renderer>();
         youWonText = youWon.GetComponent<GUIText>();
         Application.targetFrameRate = -1;
+        
 	}
 
     

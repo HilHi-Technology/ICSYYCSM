@@ -13,7 +13,7 @@ public class NodeScript : MonoBehaviour {
 	
     public void FindOtherNodes(){
         foreach (NodeScript nodeScr in Enemy.allNodes) {
-            //Connect the node with any possible room nodes.
+            //Connect the node with any possible room nodes, adding it to the neighbor list
             GameObject node = nodeScr.gameObject;
             if (node != gameObject) {
                 float distance = (node.transform.position - transform.position).magnitude;
@@ -29,6 +29,17 @@ public class NodeScript : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void DestroyNode() {
+        //Remove this node from all neighbor list and destroy it
+        foreach (NodeScript node in Enemy.allNodes) {
+            //Disconnect destination node and start node from the rest.
+            if (node.neighbors.Contains(gameObject)) {
+                node.neighbors.Remove(gameObject);
+            }
+        }
+        Destroy(gameObject);
     }
 	// Update is called once per frame
 	void Update () {
