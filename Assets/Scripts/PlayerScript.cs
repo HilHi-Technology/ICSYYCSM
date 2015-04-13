@@ -3,24 +3,20 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
     Vector2 playerPos;
-    public LayerMask lightLayerMask;
-    public LayerMask badBoxMask;
     public int rayCastAmnt; //Amount of rays being cast to check for visibility
     public float visionRange;
     public float shadowLength;
     public float shadowOffset;
     public Transform badBox;
     private bool badBoxHit;
-    public Transform youWon;
-    private GUIText youWonText;
     public float speed; //How fast the player moves
     private Renderer renderer;
     static public bool playerDiedThisLevel = false;
 
     // Use this for initialization
 	void Start () {
+        Cursor.visible = false;
         renderer = GetComponent<Renderer>();
-        youWonText = youWon.GetComponent<GUIText>();
         Application.targetFrameRate = -1;
         
 	}

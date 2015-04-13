@@ -13,7 +13,7 @@ public class LightScript : MonoBehaviour {
 
     public Transform eyelids;
     private SpriteRenderer eyelidsRenderer;
-    public bool areEyesClosed;
+    static public bool areEyesClosed;
     public float eyesCloseTime;
     public float eyesOpenTime;
     private Color newEyelidsColor;

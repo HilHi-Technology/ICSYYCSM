@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour {
     public LayerMask pathMask;
     public LayerMask playerSightMask;
     public GameObject player;
-    private LightScript lightScript;
+    //private LightScript lightScript;
     private bool seenByPlayer;
     private SpriteRenderer renderer;
     private Vector2[] vertices;
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour {
         target = default(Vector2);
 
         allNodes = FindObjectsOfType(typeof(NodeScript)) as NodeScript[];
-        lightScript = player.GetComponent<LightScript>();
+        //lightScript = player.GetComponent<LightScript>();
         //Debug.Log(Vector2.Angle(new Vector2(0, 0), new Vector2(0, 2)));
         vertices = GetComponent<PolygonCollider2D>().points;
         body2D = GetComponent<Rigidbody2D>();
@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour {
             }
         }
         seenByPlayer = false;
-        if (lightScript.areEyesClosed) {
+        if (LightScript.areEyesClosed) {
             seenByPlayer = false;
         }
         else {

@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Wall
   - Window
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Enemy
   - Wall
   - Window
-  - 
+  - Door
   - 
   - 
   - 
