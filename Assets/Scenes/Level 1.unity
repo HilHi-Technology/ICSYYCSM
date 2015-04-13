@@ -2169,18 +2169,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f370cf621e94088428962ada8e613066, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightLayerMask:
-    serializedVersion: 2
-    m_Bits: 513
-  badBoxMask:
-    serializedVersion: 2
-    m_Bits: 1537
   rayCastAmnt: 360
   visionRange: 30
   shadowLength: 30
   shadowOffset: .200000003
   badBox: {fileID: 400000, guid: 03314de47117d3643ba1a08f2b80ceba, type: 2}
-  youWon: {fileID: 200863084}
   speed: 5
 --- !u!212 &1862602108
 SpriteRenderer:

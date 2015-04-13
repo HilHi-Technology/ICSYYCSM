@@ -89,7 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrolNodes: []
   target: {x: 0, y: 0}
-  speed: 10
+  speed: 12
   pathMask:
     serializedVersion: 2
     m_Bits: 7168

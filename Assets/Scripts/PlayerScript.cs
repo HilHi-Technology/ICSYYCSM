@@ -7,8 +7,6 @@ public class PlayerScript : MonoBehaviour {
     public float visionRange;
     public float shadowLength;
     public float shadowOffset;
-    public Transform badBox;
-    private bool badBoxHit;
     public float speed; //How fast the player moves
     private Renderer renderer;
     static public bool playerDiedThisLevel = false;

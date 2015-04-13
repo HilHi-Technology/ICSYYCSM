@@ -25,6 +25,7 @@ public class LightScript : MonoBehaviour {
     private bool canCloseEyes = true;
     private bool clearedEyes = false;
 
+    public bool blurring;
     private float blurriness = 0;
     public int visionRayAmount;
     public float blurrinessTime;
@@ -54,7 +55,12 @@ public class LightScript : MonoBehaviour {
             //newEyelidsColor = new Color(eyelidsRenderer.color.r, eyelidsRenderer.color.g, eyelidsRenderer.color.b, 0);
             areEyesClosed = false;
             blurriness = maxBlurriness;
-            BlurScript.enabled = true;
+            if (blurring) {
+                BlurScript.enabled = true;
+            } else {
+                BlurScript.enabled = false; 
+            }
+            
             canCloseEyes = false;
         }
         else if (Input.GetButtonDown("Blink") && !areEyesClosed && canCloseEyes) {
@@ -95,7 +101,9 @@ public class LightScript : MonoBehaviour {
                 //clearedEyes = false;
                 //MotionBlurScript.blurAmount = 0f;
             }
-            if (blurriness >= 2) {
+            if (!blurring) {
+                eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
+            } else if (blurriness >= 2) {
                 eyesClosedVisionRadius = Mathf.Lerp(eyesClosedVisionRadius, eyesOpenRadius, eyesOpenTime * Time.deltaTime);
             } else {
                 
