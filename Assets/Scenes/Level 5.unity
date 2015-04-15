@@ -270,7 +270,7 @@ GUIText:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 200863082}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Text: 'If I can''t see them,
 
@@ -586,7 +586,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!114 &507392581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,7 +1246,7 @@ Transform:
   - {fileID: 1066502169}
   - {fileID: 466036928}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!61 &1862602104
 BoxCollider2D:
   m_ObjectHideFlags: 0
