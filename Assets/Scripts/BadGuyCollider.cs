@@ -22,6 +22,7 @@ public class BadGuyCollider : MonoBehaviour {
 			GUIText lose = YouLose.GetComponent<GUIText>();  
 			lose.enabled = true;
 			transform.gameObject.AddComponent<GameOverScript>();
+            Cursor.visible = true;
 			Time.timeScale = 0;
             PlayerScript.playerDiedThisLevel = true;
 		}

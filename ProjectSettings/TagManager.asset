@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - Window
   - Door
+  - Music
   layers:
   - Default
   - TransparentFX

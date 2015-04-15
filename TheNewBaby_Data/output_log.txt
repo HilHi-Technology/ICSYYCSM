@@ -14,12 +14,64 @@ Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBa
 Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBaby_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBaby_Data\Managed\UnityEngine.UI.dll (this message is harmless)
 Loading C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBaby_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.080 seconds
+- Completed reload, in  0.108 seconds
 desktop: 1600x900 60Hz; virtual: 1600x900 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
 Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBaby_Data\Managed\System.Core.dll (this message is harmless)
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 1444 -> priority: 1 
-  Thread -> id: 3058 -> priority: 1 
+  Thread -> id: 2230 -> priority: 1 
+  Thread -> id: 111c -> priority: 1 
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.787736 ms
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 428.
+Total: 0.400710 ms (FindLiveObjects: 0.041482 ms CreateObjectMapping: 0.036350 ms MarkObjects: 0.275408 ms  DeleteObjects: 0.046614 ms)
+
+Platform assembly: C:\Users\tinlun123\Documents\Unity Project\OGPC-2015\TheNewBaby_Data\Managed\System.dll (this message is harmless)
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.810401 ms
+
+Unloading 127 unused Assets to reduce memory usage. Loaded Objects now: 400.
+Total: 0.352385 ms (FindLiveObjects: 0.048752 ms CreateObjectMapping: 0.028225 ms MarkObjects: 0.170205 ms  DeleteObjects: 0.103491 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.763787 ms
+
+Unloading 97 unused Assets to reduce memory usage. Loaded Objects now: 543.
+Total: 0.328864 ms (FindLiveObjects: 0.042337 ms CreateObjectMapping: 0.022237 ms MarkObjects: 0.161225 ms  DeleteObjects: 0.101781 ms)
+
+NullReferenceException
+  at (wrapper managed-to-native) UnityEngine.Component:get_gameObject ()
+  at NodeScript.FindOtherNodes () [0x00000] in <filename unknown>:0 
+  at NodeScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException
+  at (wrapper managed-to-native) UnityEngine.Component:get_gameObject ()
+  at NodeScript.FindOtherNodes () [0x00000] in <filename unknown>:0 
+  at NodeScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException
+  at (wrapper managed-to-native) UnityEngine.Component:get_gameObject ()
+  at NodeScript.FindOtherNodes () [0x00000] in <filename unknown>:0 
+  at NodeScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.679967 ms
+
+Unloading 172 unused Assets to reduce memory usage. Loaded Objects now: 569.
+Total: 0.325443 ms (FindLiveObjects: 0.027369 ms CreateObjectMapping: 0.030363 ms MarkObjects: 0.129578 ms  DeleteObjects: 0.137704 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.293073 ms
+
+Unloading 208 unused Assets to reduce memory usage. Loaded Objects now: 223.
+Total: 0.963501 ms (FindLiveObjects: 0.064147 ms CreateObjectMapping: 0.065003 ms MarkObjects: 0.318601 ms  DeleteObjects: 0.514038 ms)
+
