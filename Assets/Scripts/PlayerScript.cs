@@ -10,6 +10,9 @@ public class PlayerScript : MonoBehaviour {
     public float speed; //How fast the player moves
     private Renderer renderer;
     static public bool playerDiedThisLevel = false;
+	private int footstepTimer = 0;
+	public AudioClip stepSound;
+	public AudioSource source;
 
     // Use this for initialization
 	void Start () {
@@ -19,16 +22,10 @@ public class PlayerScript : MonoBehaviour {
         
 	}
 
-    
-
-
     void Update() {
         playerPos = new Vector2(transform.position.x, transform.position.y); //Changing player position into a vector2 instead of v3
         //Debug.Log(renderer.isVisible);
     }
-	
-
-
 
 	// Update is called once every 0.2 seconds (not every frame)
     void FixedUpdate() {
@@ -38,29 +35,16 @@ public class PlayerScript : MonoBehaviour {
         float verMove = Input.GetAxisRaw("Vertical") * speed;
         GetComponent<Rigidbody2D>().velocity = new Vector2(horMove, verMove); //Set the velocity
 
-
+		if ((horMove != 0 || verMove != 0) && footstepTimer >= 20) {
+						source.PlayOneShot (stepSound);
+						footstepTimer = 0;
+		} else {
+				footstepTimer++;
+		}
     }
 
     void Blink() {
 
     }
-
-
-
-
-		
-		
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+}
