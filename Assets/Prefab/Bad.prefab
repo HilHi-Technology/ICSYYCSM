@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.8500004, y: 10.46, z: 0}
+  m_LocalPosition: {x: -21.2000008, y: -20.7000008, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,6 +76,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   YouLose: {fileID: 417238, guid: 347bf675d00773149952794306b04b8a, type: 2}
+  playerSource: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 55af8f4fcd7f8cf4695fcf0b07c6203b, type: 3}
 --- !u!114 &11484486
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,7 +98,7 @@ MonoBehaviour:
   playerSightMask:
     serializedVersion: 2
     m_Bits: 5376
-  player: {fileID: 100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
+  player: {fileID: 0}
 --- !u!212 &21200272
 SpriteRenderer:
   m_ObjectHideFlags: 1

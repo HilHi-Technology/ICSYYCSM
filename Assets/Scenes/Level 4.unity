@@ -920,7 +920,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!114 &496182083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,6 +1091,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c70cc4c7d037ceb45b306b7ec176597b, type: 2}
   m_IsPrefabParent: 0
+--- !u!82 &510754336
+AudioSource:
+  m_PrefabParentObject: {fileID: 8296148, guid: c70cc4c7d037ceb45b306b7ec176597b,
+    type: 2}
+  m_PrefabInternal: {fileID: 510754335}
 --- !u!1001 &519246995
 Prefab:
   m_ObjectHideFlags: 0
@@ -2842,6 +2847,10 @@ Prefab:
       propertyPath: player
       value: 
       objectReference: {fileID: 1862602102}
+    - target: {fileID: 11452726, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
+      propertyPath: playerSource
+      value: 
+      objectReference: {fileID: 510754336}
     - target: {fileID: 136302, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: m_Name
       value: Bad 1

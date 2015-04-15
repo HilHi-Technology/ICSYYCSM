@@ -378,6 +378,11 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 457116, guid: 72576d373ae3bd64296efa0a585245bb, type: 2}
   m_PrefabInternal: {fileID: 1844692742}
+--- !u!82 &346750224
+AudioSource:
+  m_PrefabParentObject: {fileID: 8296148, guid: c70cc4c7d037ceb45b306b7ec176597b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1649906395}
 --- !u!1001 &392324611
 Prefab:
   m_ObjectHideFlags: 0
@@ -1443,12 +1448,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 459346, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11484486, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: player
       value: 
       objectReference: {fileID: 1862602102}
+    - target: {fileID: 11452726, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
+      propertyPath: playerSource
+      value: 
+      objectReference: {fileID: 346750224}
     - target: {fileID: 136302, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: m_Name
       value: Bad 1
@@ -1636,7 +1645,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 459346, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11484486, guid: f56b9dc6be83e79459017fa56ea66316, type: 2}
       propertyPath: player
