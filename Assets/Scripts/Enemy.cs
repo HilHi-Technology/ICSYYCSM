@@ -84,10 +84,12 @@ public class Enemy : MonoBehaviour {
                 RaycastHit2D ray = Physics2D.Raycast(vertex, (Vector2)player.transform.position - vertex, Mathf.Infinity, playerSightMask);
                 if (ray.collider.tag == "Player") {
                     seenByPlayer = true;
+                    Debug.DrawLine(vertex, ray.point, Color.blue);
                     break;
                 }
             }
         }
+        Debug.Log(seenByPlayer);
         //Debug.Log(seenByPlayer);
     }
 
