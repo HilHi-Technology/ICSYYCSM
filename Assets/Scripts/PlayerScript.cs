@@ -25,6 +25,9 @@ public class PlayerScript : MonoBehaviour {
     void Update() {
         playerPos = new Vector2(transform.position.x, transform.position.y); //Changing player position into a vector2 instead of v3
         //Debug.Log(renderer.isVisible);
+        if (Input.GetButton("Restart")) { 
+            Application.LoadLevel(Application.loadedLevel);
+        }
     }
 
 	// Update is called once every 0.2 seconds (not every frame)
