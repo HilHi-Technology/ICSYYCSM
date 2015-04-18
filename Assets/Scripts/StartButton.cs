@@ -19,7 +19,7 @@ public class StartButton : MonoBehaviour {
 		const int buttonHeight = 60;
 
 		Rect buttonRect = new Rect (
-			Screen.width / 2 - (buttonWidth / 20),
+			Screen.width / 2 + 20 - (buttonWidth / 20),
 			(2 * Screen.height / 3) - (buttonHeight / 2),
 			buttonWidth,
 			buttonHeight
