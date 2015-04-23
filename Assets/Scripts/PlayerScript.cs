@@ -27,6 +27,7 @@ public class PlayerScript : MonoBehaviour {
         //Debug.Log(renderer.isVisible);
         if (Input.GetButton("Restart")) { 
             Application.LoadLevel(Application.loadedLevel);
+            Time.timeScale = 1;
         }
     }
 

@@ -185,7 +185,7 @@ public class LightScript : MonoBehaviour {
                     Debug.DrawLine(start, ray2.point, Color.yellow);
                 }
                 DrawRectangle(shadow_prev_point, shadow_prev_point_extend, shadow_cur_point, shadow_cur_point_extend, Color.black);
-
+                //Debug.DrawLine(transform.position, ray.point, Color.white);
 
             }
             previousPoint = v;
@@ -222,6 +222,7 @@ public class LightScript : MonoBehaviour {
         Vector2 curPointExtend2 = new Vector2(curCos2, curSin2) * eyesClosedShadowRadius + (Vector2)transform.position;
 
         DrawRectangle(prevPoint2, prevPointExtend2, curPoint2, curPointExtend2, Color.black);
+        
     }
 
     void DrawRectangle(Vector3 botLeft, Vector3 topLeft, Vector3 botRight, Vector3 topRight, Color color) {
@@ -244,7 +245,7 @@ public class LightScript : MonoBehaviour {
         shadow_scr.colors[2] = color; //Current point
         shadow_scr.colors[3] = color; //Current point
         shadow_scr.isTriangle = false;
-        //Debug.DrawLine(transform.position, ray.point, Color.white);
+        
     }
     void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3, Color color) {
         //These objects and their meshes must be deleted at the beginning of the next loop, otherwise memory leaks and funky things happen.
